@@ -28,6 +28,10 @@ dotnet user-secrets set "SGW_ADMIN_PASSWORD" "<contraseña-segura>" --project sr
 
 El administrador inicial solo se crea cuando ambas variables están configuradas. Si la base de datos ya contiene usuarios, sus credenciales no se modifican.
 
+## Datos de desarrollo
+
+Durante el primer inicio en ambiente `Development`, la aplicación completa los catálogos y agrega una carga operacional distribuida en los últimos 120 días. Los documentos generados usan el prefijo `SGO-CARGA-`, por lo que la inicialización es idempotente y no duplica ni reemplaza información existente.
+
 ## Verificación
 
 ```powershell

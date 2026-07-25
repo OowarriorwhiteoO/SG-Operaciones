@@ -98,5 +98,129 @@ public static class SeedData
                 await db.SaveChangesAsync(ct);
             }
         }
+
+        await CargarDatosOperacionalesAsync(db, ct);
+    }
+
+    private static async Task CargarDatosOperacionalesAsync(ApplicationDbContext db, CancellationToken ct)
+    {
+        const string prefijoDocumento = "SGO-CARGA-";
+
+        // El documento marcador hace que la carga pueda ejecutarse varias veces sin duplicar información.
+        if (await db.Entradas.AnyAsync(x => x.DocumentoOrigen.StartsWith(prefijoDocumento), ct))
+            return;
+
+        var trabajadoresCarga = new (string Rut, string Nombre, string Area)[]
+        {
+            ("90.100.001-1", "Camila Rojas", "Bodega"),
+            ("90.100.002-2", "Matías Soto", "Operaciones"),
+            ("90.100.003-3", "Valentina Pérez", "Mantenimiento"),
+            ("90.100.004-4", "Diego Morales", "Logística"),
+            ("90.100.005-5", "Fernanda Silva", "Producción"),
+            ("90.100.006-6", "Nicolás Herrera", "Bodega"),
+            ("90.100.007-7", "Javiera Castro", "Operaciones"),
+            ("90.100.008-8", "Sebastián Muñoz", "Mantenimiento"),
+            ("90.100.009-9", "Daniela Contreras", "Logística"),
+            ("90.100.010-K", "Tomás Valdés", "Producción"),
+            ("90.100.011-8", "Antonia Reyes", "Bodega"),
+            ("90.100.012-6", "Benjamín Navarro", "Operaciones"),
+            ("90.100.013-4", "Isidora Vega", "Mantenimiento"),
+            ("90.100.014-2", "Vicente Fuentes", "Logística")
+        };
+        var rutsExistentes = (await db.Trabajadores.Select(x => x.Rut).ToListAsync(ct)).ToHashSet();
+        foreach (var trabajador in trabajadoresCarga.Where(x => !rutsExistentes.Contains(x.Rut)))
+            db.Trabajadores.Add(new Trabajador(trabajador.Rut, trabajador.Nombre, trabajador.Area, "carga-inicial"));
+        await db.SaveChangesAsync(ct);
+
+        var tipos = await db.TiposRegistro.Where(x => x.Estado == SistemaGestion.Domain.Enums.EstadoCatalogo.Activo)
+            .OrderBy(x => x.Id).ToListAsync(ct);
+        var motivos = await db.MotivosMerma.Where(x => x.Estado == SistemaGestion.Domain.Enums.EstadoCatalogo.Activo)
+            .OrderBy(x => x.Id).ToListAsync(ct);
+        var trabajadores = await db.Trabajadores.Where(x => x.Estado == SistemaGestion.Domain.Enums.EstadoCatalogo.Activo)
+            .OrderBy(x => x.Id).ToListAsync(ct);
+        if (tipos.Count == 0 || motivos.Count == 0 || trabajadores.Count == 0)
+            return;
+
+        var usuarioId = await db.Users.OrderBy(x => x.Id).Select(x => x.Id).FirstOrDefaultAsync(ct) ?? "sistema";
+        var hoyUtc = DateTime.UtcNow.Date;
+        var entradas = new List<Entrada>();
+
+        // La serie determinista cubre distintos tipos, fechas y cantidades para alimentar todos los indicadores.
+        for (var indice = 1; indice <= 48; indice++)
+        {
+            var tipo = tipos[(indice - 1) % tipos.Count];
+            var fecha = hoyUtc.AddDays(-(indice * 5 % 120)).AddHours(7 + indice % 10);
+            var cantidad = 40m + indice * 3.75m + (indice % 4) * 12m;
+            var entrada = new Entrada(
+                tipo.Id,
+                fecha,
+                cantidad,
+                $"{prefijoDocumento}{indice:000}",
+                usuarioId,
+                $"Recepción operacional planificada #{indice:000}.");
+            entradas.Add(entrada);
+            db.Entradas.Add(entrada);
+        }
+        await db.SaveChangesAsync(ct);
+
+        for (var indice = 1; indice <= entradas.Count; indice++)
+        {
+            var entrada = entradas[indice - 1];
+            var trabajador = trabajadores[(indice * 3) % trabajadores.Count];
+            var fechaMovimiento = entrada.FechaHora.AddHours(2);
+            var asignacionPrincipal = new Asignacion(
+                entrada.Id,
+                trabajador.Id,
+                fechaMovimiento,
+                decimal.Round(entrada.CantidadInicial * 0.32m, 3),
+                usuarioId,
+                "Entrega programada para operación.");
+            if (indice % 11 == 0)
+                asignacionPrincipal.Anular(usuarioId, "Registro sustituido durante la carga inicial.", fechaMovimiento.AddHours(1));
+            db.Asignaciones.Add(asignacionPrincipal);
+
+            if (indice % 3 == 0)
+            {
+                var segundoTrabajador = trabajadores[(indice * 5 + 1) % trabajadores.Count];
+                db.Asignaciones.Add(new Asignacion(
+                    entrada.Id,
+                    segundoTrabajador.Id,
+                    fechaMovimiento.AddDays(1),
+                    decimal.Round(entrada.CantidadInicial * 0.14m, 3),
+                    usuarioId,
+                    "Reposición complementaria."));
+            }
+
+            if (indice % 2 == 0)
+            {
+                var motivo = motivos[indice % motivos.Count];
+                var merma = new Merma(
+                    entrada.Id,
+                    motivo.Id,
+                    fechaMovimiento.AddHours(3),
+                    decimal.Round(entrada.CantidadInicial * (0.015m + indice % 4 * 0.005m), 3),
+                    usuarioId,
+                    motivo.RequiereEvidencia,
+                    motivo.RequiereEvidencia ? $"EVID-SGO-{indice:000}" : null,
+                    "Hallazgo registrado durante control operacional.");
+                if (indice % 14 == 0)
+                    merma.Anular(usuarioId, "Medición rectificada después de la revisión.", fechaMovimiento.AddHours(4));
+                db.Mermas.Add(merma);
+            }
+
+            entrada.RegistrarMovimiento(fechaMovimiento);
+            db.Auditorias.Add(new Auditoria(
+                usuarioId,
+                "Carga inicial",
+                "Crear",
+                nameof(Entrada),
+                entrada.Id.ToString(),
+                entrada.FechaHora,
+                $"carga-sgo-{indice:000}",
+                valoresNuevos: $"Documento={entrada.DocumentoOrigen};Cantidad={entrada.CantidadInicial}",
+                motivo: "Población inicial de datos operacionales."));
+        }
+
+        await db.SaveChangesAsync(ct);
     }
 }
