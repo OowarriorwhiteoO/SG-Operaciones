@@ -1,0 +1,71 @@
+@model SistemaGestion.Web.Models.IndicadorMermaViewModel
+@{
+    ViewData["Title"] = "Indicadores de merma";
+    var f = Model.Indicador.Filtro;
+}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+    <div>
+        <h1 class="mb-0">Indicadores de merma</h1>
+        <small class="text-muted">Distribución por motivo, análisis Pareto y acceso al detalle</small>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-primary" asp-action="ExportarIndicadoresCsv"
+           asp-route-FechaDesde="@f.FechaDesde.ToString("yyyy-MM-dd")"
+           asp-route-FechaHasta="@f.FechaHasta.ToString("yyyy-MM-dd")"
+           asp-route-TipoRegistroId="@f.TipoRegistroId">
+            <span class="material-symbols-outlined align-middle">download</span> CSV
+        </a>
+        <a class="btn btn-primary" asp-action="ExportarIndicadoresPdf"
+           asp-route-FechaDesde="@f.FechaDesde.ToString("yyyy-MM-dd")"
+           asp-route-FechaHasta="@f.FechaHasta.ToString("yyyy-MM-dd")"
+           asp-route-TipoRegistroId="@f.TipoRegistroId">
+            <span class="material-symbols-outlined align-middle">picture_as_pdf</span> PDF
+        </a>
+    </div>
+</div>
+<form method="get" class="card card-body shadow-sm mb-4">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row g-3 align-items-end">
+        <div class="col-md-3"><label class="form-label">Desde</label><input type="date" name="FechaDesde" value="@f.FechaDesde.ToString("yyyy-MM-dd")" class="form-control"/></div>
+        <div class="col-md-3"><label class="form-label">Hasta</label><input type="date" name="FechaHasta" value="@f.FechaHasta.ToString("yyyy-MM-dd")" class="form-control"/></div>
+        <div class="col-md-4"><label class="form-label">Tipo</label><select name="TipoRegistroId" class="form-select"><option value="">Todos</option>@foreach(var x in Model.Tipos){<option value="@x.Id" selected="@(f.TipoRegistroId==x.Id)">@x.Nombre</option>}</select></div>
+        <div class="col-md-2"><button class="btn btn-outline-primary w-100">Aplicar</button></div>
+    </div>
+</form>
+<div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="card shadow-sm h-100"><div class="card-body"><small class="text-muted">Total entradas del período</small><div class="h3">@Model.Indicador.TotalEntradas.ToString("N3")</div></div></div></div>
+    <div class="col-md-4"><div class="card shadow-sm border-warning h-100"><div class="card-body"><small class="text-muted">Total mermas vigentes</small><div class="h3 text-warning-emphasis">@Model.Indicador.TotalMermas.ToString("N3")</div></div></div></div>
+    <div class="col-md-4"><div class="card shadow-sm h-100"><div class="card-body"><small class="text-muted">Tasa global de merma</small><div class="h3">@((Model.Indicador.TotalEntradas == 0 ? 0 : Model.Indicador.TotalMermas / Model.Indicador.TotalEntradas * 100).ToString("N2"))%</div></div></div></div>
+</div>
+<div class="card shadow-sm mb-4">
+    <div class="card-header fw-semibold d-flex justify-content-between"><span>Participación por motivo</span><span class="text-muted small">Seleccione una barra para ver sus movimientos</span></div>
+    <div class="card-body">
+        @if(Model.Indicador.Items.Count==0){<p class="text-muted mb-0">No hay mermas vigentes en el período.</p>}
+        @foreach(var x in Model.Indicador.Items)
+        {
+            <a class="d-block text-decoration-none text-body mb-3" asp-action="Index"
+               asp-route-FechaDesde="@f.FechaDesde.ToString("yyyy-MM-dd")"
+               asp-route-FechaHasta="@f.FechaHasta.ToString("yyyy-MM-dd")"
+               asp-route-MotivoMermaId="@x.MotivoMermaId" asp-route-TipoRegistroId="@x.TipoRegistroId"
+               asp-route-Estado="Vigente">
+                <div class="d-flex justify-content-between gap-2"><span>@x.Motivo · @x.Tipo</span><strong>@x.PorcentajeMermas.ToString("N2")%</strong></div>
+                <div class="progress" role="progressbar" aria-label="@x.Motivo" aria-valuenow="@x.PorcentajeMermas" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar bg-warning" style="width:@x.PorcentajeMermas.ToString("0.##",System.Globalization.CultureInfo.InvariantCulture)%"></div></div>
+            </a>
+        }
+    </div>
+</div>
+<div class="table-responsive bg-white rounded shadow-sm">
+    <table class="table mb-0">
+        <thead><tr><th>Motivo</th><th>Tipo</th><th class="text-end">Cantidad</th><th class="text-end">Frecuencia</th><th class="text-end">% mermas</th><th class="text-end">% entradas</th><th class="text-end">% acumulado</th><th></th></tr></thead>
+        <tbody>
+        @foreach(var x in Model.Indicador.Items)
+        {
+            <tr>
+                <td>@x.Motivo</td><td>@x.Tipo</td><td class="text-end">@x.Cantidad.ToString("N3") @x.UnidadMedida</td><td class="text-end">@x.Frecuencia</td>
+                <td class="text-end">@x.PorcentajeMermas.ToString("N2")%</td><td class="text-end">@x.PorcentajeEntradas.ToString("N2")%</td><td class="text-end fw-bold">@x.PorcentajeAcumulado.ToString("N2")%</td>
+                <td class="text-end"><a class="btn btn-sm btn-outline-primary" asp-action="Index" asp-route-FechaDesde="@f.FechaDesde.ToString("yyyy-MM-dd")" asp-route-FechaHasta="@f.FechaHasta.ToString("yyyy-MM-dd")" asp-route-MotivoMermaId="@x.MotivoMermaId" asp-route-TipoRegistroId="@x.TipoRegistroId" asp-route-Estado="Vigente">Ver detalle</a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

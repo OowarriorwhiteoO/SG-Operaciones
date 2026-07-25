@@ -1,0 +1,13 @@
+@model SistemaGestion.Web.Models.MermaIndexViewModel
+@{ ViewData["Title"] = "Mermas"; }
+<div class="d-flex justify-content-between align-items-center mb-3"><div><h1 class="mb-0">Mermas</h1><small class="text-muted">Pérdidas asociadas a una entrada de origen</small></div>@if(User.IsInRole("Administrador")||User.IsInRole("Bodega")){<a class="btn btn-primary" asp-action="Crear">Nueva merma</a>}</div>
+<form method="get" class="card card-body shadow-sm mb-4"><div asp-validation-summary="ModelOnly" class="text-danger"></div><div class="row g-3 align-items-end">
+<div class="col-md-2"><label class="form-label">Desde</label><input type="date" name="FechaDesde" value="@Model.Filtro.FechaDesde?.ToString("yyyy-MM-dd")" class="form-control"/></div>
+<div class="col-md-2"><label class="form-label">Hasta</label><input type="date" name="FechaHasta" value="@Model.Filtro.FechaHasta?.ToString("yyyy-MM-dd")" class="form-control"/></div>
+<div class="col-md-4"><label class="form-label">Motivo</label><select name="MotivoMermaId" class="form-select"><option value="">Todos</option>@foreach(var x in Model.Motivos){<option value="@x.Id" selected="@(Model.Filtro.MotivoMermaId==x.Id)">@x.Nombre</option>}</select></div>
+<div class="col-md-2"><label class="form-label">Entrada</label><input type="number" name="EntradaId" min="1" value="@Model.Filtro.EntradaId" class="form-control"/></div><div class="col-md-2"><button class="btn btn-outline-primary w-100">Filtrar</button></div>
+</div></form>
+<div class="table-responsive bg-white rounded shadow-sm"><table class="table table-hover align-middle mb-0"><thead><tr><th>Fecha</th><th>Entrada</th><th>Tipo</th><th>Motivo</th><th>Evidencia</th><th class="text-end">Cantidad</th><th>Estado</th><th></th></tr></thead><tbody>
+@if(Model.Resultado.Items.Count==0){<tr><td colspan="8" class="text-center text-muted py-5">No existen mermas para los filtros seleccionados.</td></tr>}
+@foreach(var x in Model.Resultado.Items){<tr><td>@x.FechaHora.ToLocalTime().ToString("dd-MM-yyyy HH:mm")</td><td><a asp-controller="Entradas" asp-action="Detalle" asp-route-id="@x.EntradaId">@x.DocumentoOrigen</a></td><td>@x.Tipo</td><td>@x.Motivo</td><td>@(x.EvidenciaReferencia ?? "—")</td><td class="text-end">@x.Cantidad.ToString("N3") @x.UnidadMedida</td><td>@x.Estado</td><td class="text-end">@if(x.Estado.ToString()=="Vigente"&&(User.IsInRole("Administrador")||User.IsInRole("Supervisor"))){<a class="btn btn-sm btn-outline-danger" asp-controller="Anulaciones" asp-action="Crear" asp-route-clase="Merma" asp-route-id="@x.Id">Anular</a>}</td></tr>}</tbody></table></div>
+

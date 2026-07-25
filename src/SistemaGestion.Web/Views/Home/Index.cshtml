@@ -1,0 +1,28 @@
+@using SistemaGestion.Domain.Enums
+@model SistemaGestion.Application.DTOs.DashboardDto
+@{ ViewData["Title"] = "Panel de Control Principal"; var f = Model.Filtro; }
+<section class="page-heading">
+    <div><span class="eyebrow">Vista general</span><h1>Panel de Control Principal</h1><p>Resumen operacional y trazabilidad del período seleccionado.</p></div>
+    <form method="get" class="period-filter"><input type="date" name="FechaDesde" value="@f.FechaDesde.ToString("yyyy-MM-dd")"/><span>—</span><input type="date" name="FechaHasta" value="@f.FechaHasta.ToString("yyyy-MM-dd")"/><button class="btn btn-primary">Actualizar</button></form>
+</section>
+<section class="kpi-grid">
+    <a class="kpi-card" asp-controller="Entradas" asp-action="Index" asp-route-FechaDesde="@f.FechaDesde.ToString("yyyy-MM-dd")" asp-route-FechaHasta="@f.FechaHasta.ToString("yyyy-MM-dd")"><span class="kpi-icon blue"><span class="material-symbols-outlined">download</span></span><small>Total de entradas</small><strong>@Model.TotalEntradas.ToString("N0")</strong><em>@Model.CantidadRecibida.ToString("N3") recibidas</em></a>
+    <a class="kpi-card" asp-controller="Asignaciones" asp-action="Index"><span class="kpi-icon violet"><span class="material-symbols-outlined">assignment_ind</span></span><small>Total asignado</small><strong>@Model.CantidadAsignada.ToString("N3")</strong><div class="kpi-meter"><i style="width:@(Model.CantidadRecibida == 0 ? 0 : Math.Min(100, Model.CantidadAsignada / Model.CantidadRecibida * 100).ToString("0",System.Globalization.CultureInfo.InvariantCulture))%"></i></div></a>
+    <a class="kpi-card" asp-controller="Mermas" asp-action="Indicadores"><span class="kpi-icon red"><span class="material-symbols-outlined">trending_down</span></span><small>Mermas del período</small><strong>@Model.CantidadMerma.ToString("N3")</strong><em class="danger-text">@((Model.CantidadRecibida == 0 ? 0 : Model.CantidadMerma / Model.CantidadRecibida * 100).ToString("N2"))% de lo recibido</em></a>
+    <a class="kpi-card" asp-controller="Trabajadores" asp-action="Index"><span class="kpi-icon amber"><span class="material-symbols-outlined">badge</span></span><small>Trabajadores activos</small><strong>@Model.TrabajadoresActivos</strong><em>Saldo disponible: @Model.SaldoTotal.ToString("N3")</em></a>
+</section>
+<section class="dashboard-split">
+    <div class="dashboard-panel">
+        <div class="panel-heading"><div><h2>Movimientos recientes</h2><small>Últimas operaciones del período</small></div><a asp-controller="Reportes" asp-action="Movimientos">Ver todos</a></div>
+        <div class="movement-list">
+        @if(Model.UltimosMovimientos.Count==0){<div class="empty-state">No existen movimientos en el período.</div>}
+        @foreach(var x in Model.UltimosMovimientos){<div class="movement-row"><span class="movement-type @x.Clase.ToString().ToLowerInvariant()"><span class="material-symbols-outlined">@(x.Clase==ClaseMovimiento.Entrada?"download":x.Clase==ClaseMovimiento.Asignacion?"person":"trending_down")</span></span><div><strong>@x.Clase · @x.Tipo</strong><small>@x.DocumentoOrigen · @x.FechaHora.ToLocalTime().ToString("dd MMM, HH:mm")</small></div><b>@x.Cantidad.ToString("N3") @x.UnidadMedida</b><span class="status-badge @(x.Estado==EstadoMovimiento.Vigente?"success":"neutral")">@x.Estado</span></div>}
+        </div>
+    </div>
+    <aside class="dashboard-panel alerts-panel">
+        <div class="panel-heading"><div><h2>Alertas de stock</h2><small>Situaciones que requieren atención</small></div><span class="material-symbols-outlined">notifications</span></div>
+        <div class="alert-item danger"><span class="material-symbols-outlined">warning</span><div><strong>@Model.EntradasSaldoBajo entradas con saldo bajo</strong><small>Saldo igual o inferior al 10% inicial.</small></div></div>
+        @foreach(var x in Model.MermasPorMotivo){<div class="alert-item"><span class="material-symbols-outlined">info</span><div><strong>@x.Motivo</strong><small>@x.Cantidad.ToString("N3") · @x.Porcentaje.ToString("N1")% de las mermas.</small></div></div>}
+        <a class="btn btn-primary w-100" asp-controller="Mermas" asp-action="Indicadores">Ver indicadores</a>
+    </aside>
+</section>

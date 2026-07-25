@@ -1,0 +1,81 @@
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    string Active(string name) => controller.Equals(name, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+}
+<!DOCTYPE html>
+<html lang="es" class="h-100">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · SG-Operaciones</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="app-body">
+<div class="app-shell">
+    <aside class="app-sidebar" id="appSidebar">
+        <div class="brand-block">
+            <div class="brand-mark"><span class="material-symbols-outlined">inventory_2</span></div>
+            <div><div class="brand-title">SG-Operaciones</div><div class="brand-subtitle">Gestión operacional</div></div>
+        </div>
+        <nav class="sidebar-nav" aria-label="Navegación principal">
+            <div class="nav-section-label">Principal</div>
+            <a class="sidebar-link @Active("Home")" asp-controller="Home" asp-action="Index"><span class="material-symbols-outlined">dashboard</span><span>Panel principal</span></a>
+            <div class="nav-section-label">Operaciones</div>
+            <a class="sidebar-link @Active("Entradas")" asp-controller="Entradas" asp-action="Index"><span class="material-symbols-outlined">inventory</span><span>Entradas</span></a>
+            <a class="sidebar-link @Active("Asignaciones")" asp-controller="Asignaciones" asp-action="Index"><span class="material-symbols-outlined">assignment_ind</span><span>Asignaciones</span></a>
+            <a class="sidebar-link @Active("Mermas")" asp-controller="Mermas" asp-action="Index"><span class="material-symbols-outlined">report</span><span>Mermas</span></a>
+            @if (User.IsInRole("Administrador") || User.IsInRole("Supervisor"))
+            {
+                <a class="sidebar-link @(controller == "Mermas" && ViewContext.RouteData.Values["action"]?.ToString() == "Indicadores" ? "active" : "")" asp-controller="Mermas" asp-action="Indicadores"><span class="material-symbols-outlined">assessment</span><span>Indicadores</span></a>
+                <a class="sidebar-link @Active("Reportes")" asp-controller="Reportes" asp-action="Index"><span class="material-symbols-outlined">summarize</span><span>Informes</span></a>
+            }
+            <div class="nav-section-label">Catálogos</div>
+            <a class="sidebar-link @Active("Trabajadores")" asp-controller="Trabajadores" asp-action="Index"><span class="material-symbols-outlined">badge</span><span>Trabajadores</span></a>
+            <a class="sidebar-link @Active("TiposRegistro")" asp-controller="TiposRegistro" asp-action="Index"><span class="material-symbols-outlined">category</span><span>Tipos de registro</span></a>
+            <a class="sidebar-link @Active("MotivosMerma")" asp-controller="MotivosMerma" asp-action="Index"><span class="material-symbols-outlined">rule</span><span>Motivos de merma</span></a>
+            @if (User.IsInRole("Administrador"))
+            {
+                <a class="sidebar-link @Active("Auditoria")" asp-controller="Auditoria" asp-action="Index"><span class="material-symbols-outlined">policy</span><span>Auditoría</span></a>
+                <a class="sidebar-link @Active("Usuarios")" asp-controller="Usuarios" asp-action="Index"><span class="material-symbols-outlined">manage_accounts</span><span>Usuarios</span></a>
+            }
+        </nav>
+        <div class="sidebar-account">
+            <div class="account-avatar">@(User.Identity?.Name?.Substring(0, 1).ToUpperInvariant() ?? "U")</div>
+            <div class="account-copy"><strong>@(User.Identity?.Name ?? "Usuario")</strong><span>@(User.IsInRole("Administrador") ? "Administrador" : "Usuario autorizado")</span></div>
+            <form asp-controller="Cuenta" asp-action="CerrarSesion" method="post"><button class="icon-button icon-button-inverted" title="Cerrar sesión" aria-label="Cerrar sesión"><span class="material-symbols-outlined">logout</span></button></form>
+        </div>
+    </aside>
+    <div class="app-main">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="icon-button sidebar-toggle" type="button" data-sidebar-toggle aria-label="Abrir menú"><span class="material-symbols-outlined">menu</span></button>
+                <div class="system-name">SG<br/>Operaciones</div>
+                <a class="topbar-search" asp-controller="Reportes" asp-action="Movimientos"><span class="material-symbols-outlined">search</span><span>Buscar operaciones...</span></a>
+            </div>
+            <div class="topbar-right">
+                <button class="icon-button" type="button" title="Notificaciones"><span class="material-symbols-outlined">notifications</span></button>
+                <a class="icon-button" asp-controller="Home" asp-action="Index" title="Ayuda"><span class="material-symbols-outlined">help</span></a>
+                <div class="top-avatar">@(User.Identity?.Name?.Substring(0, 1).ToUpperInvariant() ?? "U")</div>
+            </div>
+        </header>
+        <main class="content-canvas">
+            @if (TempData["Mensaje"] is string mensaje) { <div class="alert alert-success app-alert"><span class="material-symbols-outlined">check_circle</span><span>@mensaje</span></div> }
+            @if (TempData["Error"] is string error) { <div class="alert alert-danger app-alert"><span class="material-symbols-outlined">error</span><span>@error</span></div> }
+            @RenderBody()
+        </main>
+        <footer class="app-footer">SG-Operaciones · Transacciones protegidas y auditadas</footer>
+    </div>
+</div>
+<div class="sidebar-backdrop" data-sidebar-toggle></div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.querySelectorAll('[data-sidebar-toggle]').forEach(x => x.addEventListener('click', () => document.body.classList.toggle('sidebar-open')));
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

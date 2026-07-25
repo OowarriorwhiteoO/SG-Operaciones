@@ -1,0 +1,6 @@
+@model SistemaGestion.Web.Models.UsuarioCrearViewModel
+@{ ViewData["Title"] = "Nuevo usuario"; }
+<h1>Nuevo usuario</h1><form method="post" class="card card-body shadow-sm"><div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="row g-3"><div class="col-md-6"><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control"/></div><div class="col-md-6"><label asp-for="NombreCompleto" class="form-label"></label><input asp-for="NombreCompleto" class="form-control"/></div><div class="col-md-6"><label asp-for="Password" class="form-label"></label><input asp-for="Password" class="form-control"/></div><div class="col-md-6"><label asp-for="Rol" class="form-label"></label><select asp-for="Rol" asp-items="@(new SelectList(Model.RolesDisponibles))" class="form-select"><option value="">Seleccione…</option></select></div></div>
+<div class="mt-4"><button class="btn btn-primary">Crear usuario</button> <a class="btn btn-link" asp-action="Index">Cancelar</a></div></form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -1,0 +1,5 @@
+@model IReadOnlyList<SistemaGestion.Application.DTOs.MotivoMermaDto>
+@{ ViewData["Title"] = "Motivos de merma"; }
+<div class="d-flex justify-content-between align-items-center mb-3"><h1>Motivos de merma</h1><a class="btn btn-primary" asp-action="Crear">Nuevo motivo</a></div>
+<div class="table-responsive bg-white shadow-sm rounded"><table class="table table-hover mb-0"><thead><tr><th>Nombre</th><th>Evidencia</th><th>Autorización</th><th>Estado</th><th></th></tr></thead><tbody>
+@foreach(var x in Model){<tr><td>@x.Nombre</td><td>@(x.RequiereEvidencia ? "Sí" : "No")</td><td>@(x.RequiereAutorizacion ? "Sí" : "No")</td><td>@x.Estado</td><td class="text-end"><a class="btn btn-sm btn-outline-primary" asp-action="Editar" asp-route-id="@x.Id">Editar</a> <form class="d-inline" asp-action="CambiarEstado" method="post"><input type="hidden" name="id" value="@x.Id"/><input type="hidden" name="activar" value="@(x.Estado.ToString()!="Activo" ? "true" : "false")"/><button class="btn btn-sm btn-outline-secondary">@(x.Estado.ToString()=="Activo" ? "Desactivar" : "Activar")</button></form></td></tr>}</tbody></table></div>

@@ -1,0 +1,32 @@
+@model SistemaGestion.Web.Models.AsignacionCrearViewModel
+@{ ViewData["Title"] = "Nueva asignación"; }
+<div class="row justify-content-center"><div class="col-xl-9"><h1>Nueva asignación</h1>
+<form method="post" class="card shadow-sm"><div class="card-body p-4">
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+<input asp-for="Input.EntradaRowVersion" type="hidden"/>
+<div class="row g-3">
+<div class="col-12"><label asp-for="Input.EntradaId" class="form-label"></label><select asp-for="Input.EntradaId" class="form-select"><option value="">Seleccione una entrada con saldo…</option>@foreach(var x in Model.Entradas){<option value="@x.Id" data-saldo="@x.SaldoDisponible.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-unidad="@x.UnidadMedida" data-token="@Convert.ToBase64String(x.RowVersion)">@x.Etiqueta · saldo @x.SaldoDisponible.ToString("N3") @x.UnidadMedida</option>}</select><span asp-validation-for="Input.EntradaId" class="text-danger"></span></div>
+<div class="col-md-7"><label asp-for="Input.TrabajadorId" class="form-label"></label><select asp-for="Input.TrabajadorId" class="form-select"><option value="">Seleccione trabajador activo…</option>@foreach(var x in Model.Trabajadores){<option value="@x.Id">@x.NombreCompleto · @x.Area</option>}</select><span asp-validation-for="Input.TrabajadorId" class="text-danger"></span></div>
+<div class="col-md-5"><label asp-for="Input.FechaHora" class="form-label"></label><input asp-for="Input.FechaHora" class="form-control"/></div>
+<div class="col-md-5"><label asp-for="Input.Cantidad" class="form-label"></label><div class="input-group"><input asp-for="Input.Cantidad" class="form-control"/><span id="unidad" class="input-group-text">unidad</span></div><span asp-validation-for="Input.Cantidad" class="text-danger"></span></div>
+<div class="col-md-7"><label asp-for="Input.Observacion" class="form-label"></label><input asp-for="Input.Observacion" class="form-control"/></div>
+</div>
+<div id="saldoPanel" class="alert alert-secondary mt-4 mb-0">Seleccione una entrada para consultar su saldo.</div>
+</div><div class="card-footer bg-white p-3 text-end"><a class="btn btn-link" asp-action="Index">Cancelar</a><button class="btn btn-primary">Confirmar asignación</button></div></form>
+</div></div>
+@section Scripts {
+<partial name="_ValidationScriptsPartial"/>
+<script>
+(() => {
+ const select=document.getElementById('Input_EntradaId'), token=document.getElementById('Input_EntradaRowVersion'), panel=document.getElementById('saldoPanel'), unidad=document.getElementById('unidad'), cantidad=document.getElementById('Input_Cantidad');
+ const actualizar=async()=>{
+   const option=select.options[select.selectedIndex];
+   if(!option?.value){token.value='';panel.textContent='Seleccione una entrada para consultar su saldo.';return;}
+   const response=await fetch('@Url.Action("Saldo","Entradas")?id='+encodeURIComponent(option.value),{headers:{'X-Requested-With':'XMLHttpRequest'}});
+   if(!response.ok){panel.className='alert alert-danger mt-4 mb-0';panel.textContent='No fue posible actualizar el saldo.';return;}
+   const data=await response.json();token.value=data.rowVersion;unidad.textContent=option.dataset.unidad;panel.className='alert alert-info mt-4 mb-0';panel.textContent=`Saldo actualizado: ${Number(data.disponible).toLocaleString('es-CL',{minimumFractionDigits:3,maximumFractionDigits:3})} ${option.dataset.unidad}`;
+   cantidad.max=data.disponible;
+ };
+ select.addEventListener('change',actualizar);if(select.value)actualizar();
+})();
+</script>}

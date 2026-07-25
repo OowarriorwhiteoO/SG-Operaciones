@@ -1,0 +1,5 @@
+@model IReadOnlyList<SistemaGestion.Web.Models.UsuarioListadoViewModel>
+@{ ViewData["Title"] = "Usuarios"; }
+<div class="d-flex justify-content-between align-items-center mb-3"><h1>Usuarios</h1><a class="btn btn-primary" asp-action="Crear">Nuevo usuario</a></div>
+<div class="table-responsive bg-white shadow-sm rounded"><table class="table table-hover mb-0"><thead><tr><th>Correo</th><th>Nombre</th><th>Roles</th><th>Estado</th><th></th></tr></thead><tbody>
+@foreach(var x in Model){<tr><td>@x.Email</td><td>@x.NombreCompleto</td><td>@x.Roles</td><td>@(x.Activo ? "Activo" : "Inactivo")</td><td class="text-end"><form asp-action="CambiarEstado" method="post"><input type="hidden" name="id" value="@x.Id"/><button class="btn btn-sm btn-outline-secondary">@(x.Activo ? "Desactivar" : "Activar")</button></form></td></tr>}</tbody></table></div>

@@ -1,0 +1,28 @@
+@model SistemaGestion.Web.Models.EntradaCrearViewModel
+@{ ViewData["Title"] = "Nueva entrada"; }
+<div class="row justify-content-center"><div class="col-xl-9">
+<h1>Nueva entrada</h1>
+<form method="post" class="card shadow-sm">
+<div class="card-body p-4">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <div class="row g-3">
+        <div class="col-md-7"><label asp-for="Input.TipoRegistroId" class="form-label"></label><select asp-for="Input.TipoRegistroId" class="form-select"><option value="">Seleccione…</option>@foreach(var tipo in Model.Tipos){<option value="@tipo.Id" data-unidad="@tipo.UnidadMedida">@tipo.Nombre · @tipo.UnidadMedida</option>}</select><span asp-validation-for="Input.TipoRegistroId" class="text-danger"></span></div>
+        <div class="col-md-5"><label asp-for="Input.FechaHora" class="form-label"></label><input asp-for="Input.FechaHora" class="form-control"/><span asp-validation-for="Input.FechaHora" class="text-danger"></span></div>
+        <div class="col-md-5"><label asp-for="Input.CantidadInicial" class="form-label"></label><div class="input-group"><input asp-for="Input.CantidadInicial" class="form-control"/><span id="unidad" class="input-group-text">unidad</span></div><span asp-validation-for="Input.CantidadInicial" class="text-danger"></span></div>
+        <div class="col-md-7"><label asp-for="Input.DocumentoOrigen" class="form-label"></label><input asp-for="Input.DocumentoOrigen" class="form-control" autocomplete="off"/><span asp-validation-for="Input.DocumentoOrigen" class="text-danger"></span></div>
+        <div class="col-12"><label asp-for="Input.Observacion" class="form-label"></label><textarea asp-for="Input.Observacion" class="form-control" rows="3"></textarea><span asp-validation-for="Input.Observacion" class="text-danger"></span></div>
+    </div>
+    <div class="alert alert-info mt-4 mb-0"><strong>Resumen:</strong> se registrará <span id="resumenCantidad">0,000</span> <span id="resumenUnidad">unidades</span>. El documento se normalizará para evitar duplicados.</div>
+</div>
+<div class="card-footer bg-white p-3 text-end"><a class="btn btn-link" asp-action="Index">Cancelar</a><button class="btn btn-primary">Confirmar entrada</button></div>
+</form></div></div>
+@section Scripts {
+<partial name="_ValidationScriptsPartial"/>
+<script>
+(() => {
+ const tipo=document.getElementById('Input_TipoRegistroId'), cantidad=document.getElementById('Input_CantidadInicial');
+ const actualizar=()=>{const unidad=tipo.options[tipo.selectedIndex]?.dataset.unidad||'unidad';document.getElementById('unidad').textContent=unidad;document.getElementById('resumenUnidad').textContent=unidad;document.getElementById('resumenCantidad').textContent=Number(cantidad.value||0).toLocaleString('es-CL',{minimumFractionDigits:3,maximumFractionDigits:3});};
+ tipo.addEventListener('change',actualizar);cantidad.addEventListener('input',actualizar);actualizar();
+})();
+</script>}
+

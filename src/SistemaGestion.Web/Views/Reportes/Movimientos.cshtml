@@ -1,0 +1,29 @@
+@using SistemaGestion.Domain.Enums
+@model SistemaGestion.Web.Models.ConsultaMovimientosViewModel
+@{ ViewData["Title"] = "Consulta de movimientos"; var f = Model.Filtro; }
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+    <div><h1 class="mb-0">Consulta de movimientos</h1><small class="text-muted">Búsqueda transversal de entradas, asignaciones y mermas</small></div>
+    <a class="btn btn-outline-primary" asp-action="Index">Ir a informes</a>
+</div>
+<form method="get" class="card card-body shadow-sm mb-4">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row g-3 align-items-end">
+        <div class="col-sm-6 col-xl-2"><label class="form-label">Desde</label><input class="form-control" type="date" name="FechaDesde" value="@f.FechaDesde?.ToString("yyyy-MM-dd")"/></div>
+        <div class="col-sm-6 col-xl-2"><label class="form-label">Hasta</label><input class="form-control" type="date" name="FechaHasta" value="@f.FechaHasta?.ToString("yyyy-MM-dd")"/></div>
+        <div class="col-md-4 col-xl-2"><label class="form-label">Movimiento</label><select class="form-select" name="Clase"><option value="">Todos</option>@foreach(var x in Enum.GetValues<ClaseMovimiento>()){<option value="@x" selected="@(f.Clase==x)">@x</option>}</select></div>
+        <div class="col-md-4 col-xl-3"><label class="form-label">Tipo</label><select class="form-select" name="TipoRegistroId"><option value="">Todos</option>@foreach(var x in Model.Tipos){<option value="@x.Id" selected="@(f.TipoRegistroId==x.Id)">@x.Nombre</option>}</select></div>
+        <div class="col-md-4 col-xl-3"><label class="form-label">Trabajador</label><select class="form-select" name="TrabajadorId"><option value="">Todos</option>@foreach(var x in Model.Trabajadores){<option value="@x.Id" selected="@(f.TrabajadorId==x.Id)">@x.NombreCompleto</option>}</select></div>
+        <div class="col-md-3"><label class="form-label">Estado</label><select class="form-select" name="Estado"><option value="">Todos</option>@foreach(var x in Enum.GetValues<EstadoMovimiento>()){<option value="@x" selected="@(f.Estado==x)">@x</option>}</select></div>
+        <div class="col-md-3"><label class="form-label">Documento</label><input class="form-control" name="DocumentoOrigen" value="@f.DocumentoOrigen"/></div>
+        <div class="col-md-3"><label class="form-label">Usuario responsable</label><input class="form-control" name="UsuarioResponsable" value="@f.UsuarioResponsable"/></div>
+        <div class="col-md-3"><button class="btn btn-primary w-100">Buscar</button></div>
+    </div>
+</form>
+<div class="d-flex justify-content-between align-items-center mb-2"><span class="text-muted">@Model.Resultado.TotalItems resultado(s)</span><span class="text-muted">Página @Model.Resultado.PageNumber de @Math.Max(Model.Resultado.TotalPages, 1)</span></div>
+<div class="table-responsive bg-white rounded shadow-sm"><table class="table table-hover align-middle mb-0">
+    <thead><tr><th>Fecha</th><th>Movimiento</th><th>Documento</th><th>Tipo</th><th>Detalle</th><th class="text-end">Cantidad</th><th>Estado</th><th>Responsable</th></tr></thead>
+    <tbody>
+    @if(Model.Resultado.Items.Count==0){<tr><td colspan="8" class="text-center text-muted py-5">No hay movimientos que coincidan con los filtros.</td></tr>}
+    @foreach(var x in Model.Resultado.Items){<tr><td>@x.FechaHora.ToLocalTime().ToString("dd-MM-yyyy HH:mm")</td><td><span class="badge text-bg-light">@x.Clase</span></td><td class="fw-semibold">@x.DocumentoOrigen</td><td>@x.Tipo</td><td>@(x.Trabajador ?? x.Detalle)</td><td class="text-end">@x.Cantidad.ToString("N3") @x.UnidadMedida</td><td>@x.Estado</td><td>@x.UsuarioResponsable</td></tr>}
+    </tbody></table></div>
+@if(Model.Resultado.TotalPages>1){<nav class="mt-3"><ul class="pagination justify-content-center">@for(var p=1;p<=Model.Resultado.TotalPages;p++){<li class="page-item @(p==Model.Resultado.PageNumber?"active":"")"><a class="page-link" asp-route-Pagina="@p" asp-route-FechaDesde="@f.FechaDesde?.ToString("yyyy-MM-dd")" asp-route-FechaHasta="@f.FechaHasta?.ToString("yyyy-MM-dd")" asp-route-Clase="@f.Clase" asp-route-TipoRegistroId="@f.TipoRegistroId" asp-route-TrabajadorId="@f.TrabajadorId" asp-route-Estado="@f.Estado" asp-route-DocumentoOrigen="@f.DocumentoOrigen" asp-route-UsuarioResponsable="@f.UsuarioResponsable">@p</a></li>}</ul></nav>}

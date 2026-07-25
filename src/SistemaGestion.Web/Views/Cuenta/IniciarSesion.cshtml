@@ -1,0 +1,31 @@
+@model SistemaGestion.Web.Models.LoginViewModel
+@{ Layout = "_LoginLayout"; ViewData["Title"] = "Iniciar sesión"; }
+<section class="login-brand">
+    @* La marca se presenta sin incluir datos del entorno ni información de acceso. *@
+    <div class="login-brand-row"><div class="login-logo"><span class="material-symbols-outlined">inventory_2</span></div><div><div class="login-product">SG-Operaciones</div><div class="login-suite">Gestión operacional</div></div></div>
+    <div class="login-message"><span class="login-kicker">Control y trazabilidad</span><h1>Control operativo<br/>con trazabilidad total.</h1><p>Inventario, asignaciones y mermas consolidados en una única fuente verificable.</p></div>
+</section>
+<section class="login-panel">
+    <div class="login-card">
+        <div class="login-card-icon"><span class="material-symbols-outlined">shield_lock</span></div>
+        <span class="eyebrow">Acceso seguro</span>
+        <h2>Bienvenido de nuevo</h2>
+        <p class="login-intro">Ingrese sus credenciales para acceder al sistema.</p>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <div class="form-field">
+                <label asp-for="Email" class="form-label"></label>
+                <div class="input-with-icon"><span class="material-symbols-outlined">person</span><input asp-for="Email" class="form-control" autocomplete="username" placeholder="nombre@empresa.com" /></div>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-field">
+                <label asp-for="Password" class="form-label"></label>
+                <div class="input-with-icon"><span class="material-symbols-outlined">lock</span><input asp-for="Password" class="form-control" autocomplete="current-password" placeholder="••••••••" /></div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-check login-check"><input asp-for="Recordarme" class="form-check-input" /><label asp-for="Recordarme" class="form-check-label"></label></div>
+            <button class="btn btn-primary btn-login"><span>Iniciar sesión</span><span class="material-symbols-outlined">arrow_forward</span></button>
+        </form>
+        <div class="login-security"><span class="material-symbols-outlined">verified_user</span><span>Conexión protegida · Operaciones auditadas</span></div>
+    </div>
+</section>

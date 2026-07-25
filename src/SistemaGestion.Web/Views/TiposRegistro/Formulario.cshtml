@@ -1,0 +1,3 @@
+@model SistemaGestion.Application.DTOs.TipoRegistroInput
+@{ ViewData["Title"] = Model.Id == 0 ? "Nuevo tipo" : "Editar tipo"; }
+<h1>@ViewData["Title"]</h1><form asp-action="Guardar" method="post" class="card card-body shadow-sm"><input asp-for="Id" type="hidden"/><div asp-validation-summary="ModelOnly" class="text-danger"></div><div class="row g-3"><div class="col-md-8"><label asp-for="Nombre" class="form-label"></label><input asp-for="Nombre" class="form-control"/></div><div class="col-md-4"><label asp-for="UnidadMedida" class="form-label">Unidad de medida</label><input asp-for="UnidadMedida" class="form-control"/></div></div><div class="mt-4"><button class="btn btn-primary">Guardar</button> <a class="btn btn-link" asp-action="Index">Cancelar</a></div></form>

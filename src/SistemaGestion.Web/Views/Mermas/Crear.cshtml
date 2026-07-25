@@ -1,0 +1,25 @@
+@model SistemaGestion.Web.Models.MermaCrearViewModel
+@{ ViewData["Title"] = "Nueva merma"; }
+<div class="row justify-content-center"><div class="col-xl-9"><h1>Nueva merma</h1>
+<form method="post" class="card shadow-sm"><div class="card-body p-4">
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div><input asp-for="Input.EntradaRowVersion" type="hidden"/>
+<div class="row g-3">
+<div class="col-12"><label asp-for="Input.EntradaId" class="form-label"></label><select asp-for="Input.EntradaId" class="form-select"><option value="">Seleccione una entrada con saldo…</option>@foreach(var x in Model.Entradas){<option value="@x.Id" data-unidad="@x.UnidadMedida">@x.Etiqueta · saldo @x.SaldoDisponible.ToString("N3") @x.UnidadMedida</option>}</select><span asp-validation-for="Input.EntradaId" class="text-danger"></span></div>
+<div class="col-md-7"><label asp-for="Input.MotivoMermaId" class="form-label"></label><select asp-for="Input.MotivoMermaId" class="form-select"><option value="">Seleccione motivo…</option>@foreach(var x in Model.Motivos){<option value="@x.Id" data-evidencia="@x.RequiereEvidencia.ToString().ToLowerInvariant()">@x.Nombre @(x.RequiereEvidencia ? "· exige evidencia" : "")</option>}</select><span asp-validation-for="Input.MotivoMermaId" class="text-danger"></span></div>
+<div class="col-md-5"><label asp-for="Input.FechaHora" class="form-label"></label><input asp-for="Input.FechaHora" class="form-control"/></div>
+<div class="col-md-5"><label asp-for="Input.Cantidad" class="form-label"></label><div class="input-group"><input asp-for="Input.Cantidad" class="form-control"/><span id="unidad" class="input-group-text">unidad</span></div><span asp-validation-for="Input.Cantidad" class="text-danger"></span></div>
+<div class="col-md-7"><label asp-for="Input.EvidenciaReferencia" class="form-label"></label><input asp-for="Input.EvidenciaReferencia" class="form-control" placeholder="Folio, URL o referencia documental"/><span asp-validation-for="Input.EvidenciaReferencia" class="text-danger"></span></div>
+<div class="col-12"><label asp-for="Input.Observacion" class="form-label"></label><textarea asp-for="Input.Observacion" class="form-control" rows="3"></textarea></div>
+</div><div id="saldoPanel" class="alert alert-secondary mt-4 mb-0">Seleccione una entrada para consultar su saldo.</div>
+</div><div class="card-footer bg-white p-3 text-end"><a class="btn btn-link" asp-action="Index">Cancelar</a><button class="btn btn-primary">Confirmar merma</button></div></form></div></div>
+@section Scripts {
+<partial name="_ValidationScriptsPartial"/>
+<script>
+(() => {
+ const entrada=document.getElementById('Input_EntradaId'), motivo=document.getElementById('Input_MotivoMermaId'), evidencia=document.getElementById('Input_EvidenciaReferencia'), token=document.getElementById('Input_EntradaRowVersion'), panel=document.getElementById('saldoPanel'), unidad=document.getElementById('unidad'), cantidad=document.getElementById('Input_Cantidad');
+ const saldo=async()=>{const option=entrada.options[entrada.selectedIndex];if(!option?.value){token.value='';return;}const response=await fetch('@Url.Action("Saldo","Entradas")?id='+encodeURIComponent(option.value));if(!response.ok){panel.className='alert alert-danger mt-4 mb-0';panel.textContent='No fue posible actualizar el saldo.';return;}const data=await response.json();token.value=data.rowVersion;unidad.textContent=option.dataset.unidad;cantidad.max=data.disponible;panel.className='alert alert-info mt-4 mb-0';panel.textContent=`Saldo actualizado: ${Number(data.disponible).toLocaleString('es-CL',{minimumFractionDigits:3,maximumFractionDigits:3})} ${option.dataset.unidad}`;};
+ const validarEvidencia=()=>{const requerida=motivo.options[motivo.selectedIndex]?.dataset.evidencia==='true';evidencia.required=requerida;evidencia.placeholder=requerida?'Referencia obligatoria para este motivo':'Folio, URL o referencia documental';};
+ entrada.addEventListener('change',saldo);motivo.addEventListener('change',validarEvidencia);if(entrada.value)saldo();validarEvidencia();
+})();
+</script>}
+

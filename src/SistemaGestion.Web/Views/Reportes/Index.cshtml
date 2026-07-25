@@ -1,0 +1,25 @@
+@model SistemaGestion.Web.Models.InformeTiposViewModel
+@{
+    ViewData["Title"] = "Informes";
+    var f = Model.Informe.Filtro;
+}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+    <div><h1 class="mb-0">Informe consolidado por tipo</h1><small class="text-muted">Entradas, asignaciones, mermas y saldo del período</small></div>
+    <div class="d-flex gap-2"><a class="btn btn-outline-primary" asp-action="Movimientos"><span class="material-symbols-outlined align-middle">search</span> Consultar movimientos</a><a class="btn btn-outline-primary" asp-action="Trabajador"><span class="material-symbols-outlined align-middle">badge</span> Informe por trabajador</a></div>
+</div>
+<form method="get" class="card card-body shadow-sm mb-4">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row g-3 align-items-end">
+        <div class="col-md-4"><label class="form-label">Desde</label><input class="form-control" type="date" name="FechaDesde" value="@f.FechaDesde.ToString("yyyy-MM-dd")"/></div>
+        <div class="col-md-4"><label class="form-label">Hasta</label><input class="form-control" type="date" name="FechaHasta" value="@f.FechaHasta.ToString("yyyy-MM-dd")"/></div>
+        <div class="col-md-4"><button class="btn btn-primary w-100">Generar informe</button></div>
+    </div>
+</form>
+<div class="d-flex justify-content-end gap-2 mb-3">
+    <a class="btn btn-outline-primary" asp-action="ExportarTipos" asp-route-formato="csv" asp-route-FechaDesde="@f.FechaDesde.ToString("yyyy-MM-dd")" asp-route-FechaHasta="@f.FechaHasta.ToString("yyyy-MM-dd")">Descargar CSV</a>
+    <a class="btn btn-primary" asp-action="ExportarTipos" asp-route-formato="pdf" asp-route-FechaDesde="@f.FechaDesde.ToString("yyyy-MM-dd")" asp-route-FechaHasta="@f.FechaHasta.ToString("yyyy-MM-dd")">Descargar PDF</a>
+</div>
+<div class="table-responsive bg-white rounded shadow-sm">
+    <table class="table mb-0"><thead><tr><th>Tipo</th><th>Unidad</th><th class="text-end">Entradas</th><th class="text-end">Asignaciones</th><th class="text-end">Mermas</th><th class="text-end">Saldo</th><th class="text-end">% merma</th></tr></thead>
+    <tbody>@foreach(var x in Model.Informe.Items){<tr><td class="fw-semibold">@x.Tipo</td><td>@x.UnidadMedida</td><td class="text-end">@x.Entradas.ToString("N3") <small class="text-muted">(@x.CantidadEntradas)</small></td><td class="text-end">@x.Asignaciones.ToString("N3") <small class="text-muted">(@x.CantidadAsignaciones)</small></td><td class="text-end">@x.Mermas.ToString("N3") <small class="text-muted">(@x.CantidadMermas)</small></td><td class="text-end fw-semibold">@x.Saldo.ToString("N3")</td><td class="text-end">@x.PorcentajeMerma.ToString("N2")%</td></tr>}</tbody></table>
+</div>

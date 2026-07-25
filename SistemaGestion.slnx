@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SistemaGestion.Application/SistemaGestion.Application.csproj" />
+    <Project Path="src/SistemaGestion.Domain/SistemaGestion.Domain.csproj" />
+    <Project Path="src/SistemaGestion.Infrastructure/SistemaGestion.Infrastructure.csproj" />
+    <Project Path="src/SistemaGestion.Web/SistemaGestion.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SistemaGestion.Application.Tests/SistemaGestion.Application.Tests.csproj" />
+    <Project Path="tests/SistemaGestion.Domain.Tests/SistemaGestion.Domain.Tests.csproj" />
+    <Project Path="tests/SistemaGestion.IntegrationTests/SistemaGestion.IntegrationTests.csproj" />
+  </Folder>
+</Solution>

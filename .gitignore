@@ -1,0 +1,15 @@
+bin/
+obj/
+.vs/
+.vscode/
+.idea/
+.tools/
+*.user
+*.suo
+*.db
+*.db-shm
+*.db-wal
+secrets.json
+.env
+TestResults/
+output/

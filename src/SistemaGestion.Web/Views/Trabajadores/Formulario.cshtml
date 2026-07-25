@@ -1,0 +1,9 @@
+@model SistemaGestion.Application.DTOs.TrabajadorInput
+@{ ViewData["Title"] = Model.Id == 0 ? "Nuevo trabajador" : "Editar trabajador"; }
+<h1>@ViewData["Title"]</h1><form asp-action="Guardar" method="post" class="card card-body shadow-sm">
+<input asp-for="Id" type="hidden"/><div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="row g-3"><div class="col-md-4"><label asp-for="Rut" class="form-label"></label><input asp-for="Rut" class="form-control" readonly="@(Model.Id > 0)" /><span asp-validation-for="Rut" class="text-danger"></span></div>
+<div class="col-md-8"><label asp-for="NombreCompleto" class="form-label">Nombre completo</label><input asp-for="NombreCompleto" class="form-control"/><span asp-validation-for="NombreCompleto" class="text-danger"></span></div>
+<div class="col-md-6"><label asp-for="Area" class="form-label">Área</label><input asp-for="Area" class="form-control"/><span asp-validation-for="Area" class="text-danger"></span></div></div>
+<div class="mt-4"><button class="btn btn-primary">Guardar</button> <a class="btn btn-link" asp-action="Index">Cancelar</a></div></form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

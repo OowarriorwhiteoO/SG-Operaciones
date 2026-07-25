@@ -1,0 +1,10 @@
+@model SistemaGestion.Web.Models.AnulacionViewModel
+@{ ViewData["Title"] = "Anular movimiento"; }
+<div class="row justify-content-center"><div class="col-lg-7">
+<div class="alert alert-warning"><h1 class="h3">Anular @Model.Detalle.Clase.ToString().ToLowerInvariant()</h1><p class="mb-0">Esta operación no eliminará el registro. Permanecerá visible en el historial y generará una auditoría.</p></div>
+<div class="card shadow-sm"><div class="card-body">
+<dl class="row"><dt class="col-sm-4">Identificador</dt><dd class="col-sm-8">@Model.Detalle.Identificador</dd><dt class="col-sm-4">Fecha</dt><dd class="col-sm-8">@Model.Detalle.FechaHora.ToLocalTime().ToString("dd-MM-yyyy HH:mm")</dd><dt class="col-sm-4">Cantidad</dt><dd class="col-sm-8">@Model.Detalle.Cantidad.ToString("N3") @Model.Detalle.UnidadMedida</dd><dt class="col-sm-4">Estado actual</dt><dd class="col-sm-8">@Model.Detalle.Estado</dd></dl>
+<form method="post"><input asp-for="Input.Id" type="hidden"/><input asp-for="Input.Clase" type="hidden"/><input asp-for="Input.RowVersion" type="hidden"/><div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div><div class="mb-3"><label asp-for="Input.Motivo" class="form-label"></label><textarea asp-for="Input.Motivo" class="form-control" rows="3"></textarea><span asp-validation-for="Input.Motivo" class="text-danger"></span></div><div class="text-end"><a class="btn btn-link" href="javascript:history.back()">Cancelar</a><button class="btn btn-danger" disabled="@(Model.Detalle.Estado.ToString()=="Anulada")">Confirmar anulación lógica</button></div></form>
+</div></div></div></div>
+@section Scripts { <partial name="_ValidationScriptsPartial"/> }
+
