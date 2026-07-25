@@ -35,12 +35,4 @@ dotnet build SistemaGestion.slnx
 dotnet test SistemaGestion.slnx
 ```
 
-## Estado
-
-- Sprint 1: completado.
-- Sprint 2: completado.
-- Sprint 3: completado.
-- Sprint 4: completado.
-- Sprint 5: completado.
-
 Consulte [arquitectura](docs/arquitectura.md), [modelo de datos](docs/modelo-datos.md), [reglas](docs/reglas-negocio.md), [permisos](docs/matriz-permisos.md), [instalación](docs/manual-instalacion.md), [manual de usuario](docs/manual-usuario.md), [pruebas](docs/plan-pruebas.md) y [despliegue](docs/despliegue.md).
