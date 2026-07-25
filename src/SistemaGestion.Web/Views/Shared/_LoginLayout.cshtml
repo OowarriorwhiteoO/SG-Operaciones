@@ -3,6 +3,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+        (() => {
+            const savedTheme = localStorage.getItem("sg-operaciones-theme");
+            const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            document.documentElement.dataset.theme = savedTheme ?? preferredTheme;
+        })();
+    </script>
     <title>@ViewData["Title"] · SG-Operaciones</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,10 +19,14 @@
 </head>
 <body class="login-body">
     <div class="login-grid"></div>
+    <button class="icon-button theme-toggle login-theme-toggle" type="button" data-theme-toggle title="Cambiar tema" aria-label="Cambiar tema">
+        <span class="material-symbols-outlined" data-theme-icon>dark_mode</span>
+    </button>
     <main class="login-shell">@RenderBody()</main>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

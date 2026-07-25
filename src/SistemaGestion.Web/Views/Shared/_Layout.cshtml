@@ -7,6 +7,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+        (() => {
+            const savedTheme = localStorage.getItem("sg-operaciones-theme");
+            const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            document.documentElement.dataset.theme = savedTheme ?? preferredTheme;
+        })();
+    </script>
     <title>@ViewData["Title"] · SG-Operaciones</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,10 +24,10 @@
 <body class="app-body">
 <div class="app-shell">
     <aside class="app-sidebar" id="appSidebar">
-        <div class="brand-block">
+        <a class="brand-block" asp-controller="Home" asp-action="Index" aria-label="Ir al panel principal">
             <div class="brand-mark"><span class="material-symbols-outlined">inventory_2</span></div>
             <div><div class="brand-title">SG-Operaciones</div><div class="brand-subtitle">Gestión operacional</div></div>
-        </div>
+        </a>
         <nav class="sidebar-nav" aria-label="Navegación principal">
             <div class="nav-section-label">Principal</div>
             <a class="sidebar-link @Active("Home")" asp-controller="Home" asp-action="Index"><span class="material-symbols-outlined">dashboard</span><span>Panel principal</span></a>
@@ -57,6 +64,9 @@
                 <a class="topbar-search" asp-controller="Reportes" asp-action="Movimientos"><span class="material-symbols-outlined">search</span><span>Buscar operaciones...</span></a>
             </div>
             <div class="topbar-right">
+                <button class="icon-button theme-toggle" type="button" data-theme-toggle title="Cambiar tema" aria-label="Cambiar tema">
+                    <span class="material-symbols-outlined" data-theme-icon>dark_mode</span>
+                </button>
                 <button class="icon-button" type="button" title="Notificaciones"><span class="material-symbols-outlined">notifications</span></button>
                 <a class="icon-button" asp-controller="Home" asp-action="Index" title="Ayuda"><span class="material-symbols-outlined">help</span></a>
                 <div class="top-avatar">@(User.Identity?.Name?.Substring(0, 1).ToUpperInvariant() ?? "U")</div>
@@ -73,9 +83,7 @@
 <div class="sidebar-backdrop" data-sidebar-toggle></div>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-document.querySelectorAll('[data-sidebar-toggle]').forEach(x => x.addEventListener('click', () => document.body.classList.toggle('sidebar-open')));
-</script>
+<script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
