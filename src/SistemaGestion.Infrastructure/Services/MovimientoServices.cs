@@ -227,6 +227,11 @@ public sealed class AsignacionService(
         await using var transaction = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable, ct);
         try
         {
+            // El bloqueo de actualización serializa movimientos sobre la misma entrada y evita
+            // que dos solicitudes con el mismo token queden esperando al intentar convertir bloqueos.
+            await db.Database.ExecuteSqlInterpolatedAsync(
+                $"SET LOCK_TIMEOUT 10000; SELECT [Id] FROM [Entradas] WITH (UPDLOCK, HOLDLOCK) WHERE [Id] = {input.EntradaId}",
+                ct);
             var entrada = await db.Entradas.SingleOrDefaultAsync(x => x.Id == input.EntradaId, ct);
             if (entrada is null) return await FallarAsync(transaction, "La entrada no existe.", ct);
             if (entrada.Estado != EstadoMovimiento.Vigente) return await FallarAsync(transaction, "La entrada está anulada.", ct);
