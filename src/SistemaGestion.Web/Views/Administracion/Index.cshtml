@@ -6,12 +6,33 @@
     <a class="btn btn-primary" asp-action="Empresa"><span class="material-symbols-outlined">edit</span> Datos de empresa</a>
 </div>
 
-<section class="metric-grid mb-4">
-    <article class="metric-card"><span>Trabajadores activos</span><strong>@Model.Trabajadores</strong><small>@Model.Usuarios usuarios con acceso</small></article>
-    <article class="metric-card"><span>Cotizaciones abiertas</span><strong>@Model.CotizacionesPendientes</strong><small>@Model.CotizacionesMonto.ComoMoneda(moneda) en oportunidades</small></article>
-    <article class="metric-card metric-card-warning"><span>Facturas por cobrar</span><strong>@Model.FacturasPendientes</strong><small>@Model.PorCobrar.ComoMoneda(moneda) pendiente</small></article>
-    <article class="metric-card"><span>Facturación del mes</span><strong>@Model.FacturadoMes.ComoMoneda(moneda)</strong><small>Documentos internos vigentes</small></article>
+<section class="kpi-grid admin-kpi-grid" aria-label="Resumen administrativo">
+    <article class="kpi-card" title="Trabajadores activos registrados en el catálogo de trabajadores">
+        <small>Trabajadores activos</small><span class="kpi-icon blue"><span class="material-symbols-outlined">badge</span></span>
+        <strong>@Model.Trabajadores</strong><em>@Model.Usuarios usuario(s) activo(s) con acceso</em>
+    </article>
+    <article class="kpi-card" title="Cotizaciones enviadas o aceptadas que todavía no han sido facturadas">
+        <small>Cotizaciones abiertas</small><span class="kpi-icon violet"><span class="material-symbols-outlined">request_quote</span></span>
+        <strong>@Model.CotizacionesPendientes</strong><em>@Model.CotizacionesMonto.ComoMoneda(moneda) en oportunidades</em>
+    </article>
+    <article class="kpi-card" title="Facturas internas emitidas que aún no registran pago">
+        <small>Facturas por cobrar</small><span class="kpi-icon amber"><span class="material-symbols-outlined">payments</span></span>
+        <strong>@Model.FacturasPendientes</strong><em>@Model.PorCobrar.ComoMoneda(moneda) pendiente</em>
+    </article>
+    <article class="kpi-card" title="Total de facturas internas vigentes emitidas durante el mes actual">
+        <small>Facturación del mes</small><span class="kpi-icon green"><span class="material-symbols-outlined">monitoring</span></span>
+        <strong>@Model.FacturadoMes.ComoMoneda(moneda)</strong><em>Documentos internos vigentes</em>
+    </article>
 </section>
+
+<details class="metric-source-note mb-4">
+    <summary><span class="material-symbols-outlined">info</span> ¿Cómo se calculan estos indicadores?</summary>
+    <div>
+        <p><strong>Trabajadores:</strong> registros activos del catálogo. <strong>Usuarios:</strong> cuentas activas con acceso al sistema.</p>
+        <p><strong>Cotizaciones abiertas:</strong> documentos enviados o aceptados; el monto corresponde a la suma de sus totales.</p>
+        <p><strong>Por cobrar:</strong> facturas internas emitidas sin pago. <strong>Facturación mensual:</strong> facturas vigentes emitidas desde el primer día del mes actual.</p>
+    </div>
+</details>
 
 <section class="app-panel">
     <div class="panel-heading"><div><h2>Aplicaciones de @Model.Empresa</h2><p>Accesos para administrar los datos maestros y las operaciones comerciales.</p></div></div>

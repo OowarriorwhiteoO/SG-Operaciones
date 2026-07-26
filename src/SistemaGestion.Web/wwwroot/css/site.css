@@ -390,6 +390,16 @@ html { font-size: 13px; }
 .module-icon { width: 42px; height: 42px; display: grid; place-items: center; color: white; border-radius: 10px; }
 .module-icon.blue { background: #1769c2; }.module-icon.violet { background: #6d5cc7; }.module-icon.slate { background: #52637a; }
 .module-icon.cyan { background: #078b9e; }.module-icon.green { background: #16835b; }.module-icon.orange { background: #c26808; }.module-icon.red { background: #c53f48; }
+.kpi-icon.green { color: #16835b; background: #e2f7ef; }
+.admin-kpi-grid .kpi-card { min-width: 0; }
+.admin-kpi-grid .kpi-card strong { overflow-wrap: anywhere; }
+.admin-kpi-grid .kpi-card em { align-self: end; color: var(--muted); font-weight: 550; line-height: 1.35; }
+.metric-source-note { color: var(--ink); background: var(--surface); border: 1px solid var(--outline); border-radius: 9px; box-shadow: var(--shadow-sm); }
+.metric-source-note summary { display: flex; align-items: center; gap: 8px; padding: 12px 15px; color: var(--primary); font-size: 12px; font-weight: 650; cursor: pointer; list-style: none; }
+.metric-source-note summary::-webkit-details-marker { display: none; }
+.metric-source-note summary .material-symbols-outlined { font-size: 18px; }
+.metric-source-note div { padding: 0 15px 12px; color: var(--muted); font-size: 11px; }
+.metric-source-note p { margin: 6px 0; }
 .form-panel { padding: 24px; }
 .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--outline); }
 .heading-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
