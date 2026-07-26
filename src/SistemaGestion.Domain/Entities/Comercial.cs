@@ -25,15 +25,18 @@ public sealed class Empresa : EntidadBase
     public string Moneda { get; private set; } = "CLP";
     public decimal IvaPorcentaje { get; private set; } = 19m;
     public void Editar(string razonSocial, string nombreFantasia, string rut, string? giro, string? direccion,
-        string? comuna, string? ciudad, string? email, string? telefono, string? sitioWeb, decimal iva)
+        string? comuna, string? ciudad, string? email, string? telefono, string? sitioWeb, string moneda, decimal iva)
     {
         if (iva is < 0 or > 100) throw new DomainException("El IVA debe estar entre 0 y 100.");
+        var monedaNormalizada = Requerido(moneda, "La moneda es obligatoria.").ToUpperInvariant();
+        if (monedaNormalizada is not ("CLP" or "USD" or "EUR"))
+            throw new DomainException("La moneda seleccionada no está permitida.");
         RazonSocial = Requerido(razonSocial, "La razón social es obligatoria.");
         NombreFantasia = Requerido(nombreFantasia, "El nombre de fantasía es obligatorio.");
         Rut = Requerido(rut, "El RUT es obligatorio.").ToUpperInvariant();
         Giro = Limpiar(giro); Direccion = Limpiar(direccion); Comuna = Limpiar(comuna); Ciudad = Limpiar(ciudad);
         Email = Limpiar(email); Telefono = Limpiar(telefono); SitioWeb = Limpiar(sitioWeb);
-        IvaPorcentaje = iva; FechaModificacion = DateTime.UtcNow;
+        Moneda = monedaNormalizada; IvaPorcentaje = iva; FechaModificacion = DateTime.UtcNow;
     }
     private static string Requerido(string value, string message) => string.IsNullOrWhiteSpace(value) ? throw new DomainException(message) : value.Trim();
     private static string? Limpiar(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();

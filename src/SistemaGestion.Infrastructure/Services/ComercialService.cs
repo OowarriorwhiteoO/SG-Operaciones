@@ -21,7 +21,7 @@ public sealed class ComercialService(
         return x is null ? new EmpresaInput { RazonSocial = "SG-Operaciones", NombreFantasia = "SG-Operaciones" } :
             new EmpresaInput { Id = x.Id, RazonSocial = x.RazonSocial, NombreFantasia = x.NombreFantasia, Rut = x.Rut, Giro = x.Giro,
                 Direccion = x.Direccion, Comuna = x.Comuna, Ciudad = x.Ciudad, Email = x.Email, Telefono = x.Telefono,
-                SitioWeb = x.SitioWeb, IvaPorcentaje = x.IvaPorcentaje };
+                SitioWeb = x.SitioWeb, Moneda = x.Moneda, IvaPorcentaje = x.IvaPorcentaje };
     }
 
     public async Task<Resultado> GuardarEmpresaAsync(EmpresaInput input, CancellationToken ct)
@@ -31,8 +31,8 @@ public sealed class ComercialService(
             var entity = await db.Empresas.OrderBy(x => x.Id).FirstOrDefaultAsync(ct);
             if (entity is null) { entity = new Empresa(input.RazonSocial, input.NombreFantasia, input.Rut); db.Empresas.Add(entity); }
             entity.Editar(input.RazonSocial, input.NombreFantasia, input.Rut, input.Giro, input.Direccion, input.Comuna,
-                input.Ciudad, input.Email, input.Telefono, input.SitioWeb, input.IvaPorcentaje);
-            auditoria.Registrar("Actualizar", nameof(Empresa), entity.Id.ToString(), new { input.RazonSocial, input.NombreFantasia, input.Rut });
+                input.Ciudad, input.Email, input.Telefono, input.SitioWeb, input.Moneda, input.IvaPorcentaje);
+            auditoria.Registrar("Actualizar", nameof(Empresa), entity.Id.ToString(), new { input.RazonSocial, input.NombreFantasia, input.Rut, input.Moneda });
             await db.SaveChangesAsync(ct); return Resultado.Ok();
         }
         catch (DomainException ex) { return Resultado.Fallo(ex.Message); }

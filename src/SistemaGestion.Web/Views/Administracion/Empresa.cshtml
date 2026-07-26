@@ -16,9 +16,10 @@
         <div class="col-md-4"><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control" /></div>
         <div class="col-md-4"><label asp-for="Telefono" class="form-label"></label><input asp-for="Telefono" class="form-control" /></div>
         <div class="col-md-8"><label asp-for="SitioWeb" class="form-label"></label><input asp-for="SitioWeb" class="form-control" placeholder="https://" /></div>
-        <div class="col-md-4"><label asp-for="IvaPorcentaje" class="form-label"></label><input asp-for="IvaPorcentaje" class="form-control" /></div>
+        <div class="col-md-2"><label asp-for="Moneda" class="form-label"></label><select asp-for="Moneda" class="form-select"><option value="CLP">CLP · Peso chileno ($)</option><option value="USD">USD · Dólar (US$)</option><option value="EUR">EUR · Euro (€)</option></select></div>
+        <div class="col-md-2"><label asp-for="IvaPorcentaje" class="form-label"></label><input asp-for="IvaPorcentaje" class="form-control" /></div>
+        <div class="col-12"><div class="internal-document-note mb-0"><span class="material-symbols-outlined">info</span><span>La moneda se aplica globalmente a la presentación de importes. Cambiarla no convierte valores históricos ni consulta un tipo de cambio.</span></div></div>
     </div>
     <div class="form-actions"><a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a><button class="btn btn-primary" type="submit">Guardar cambios</button></div>
 </form>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }
-

@@ -232,7 +232,7 @@ public static class SeedData
             var empresa = new Empresa("SG-Operaciones SpA", "SG-Operaciones", "76.000.000-0");
             empresa.Editar("SG-Operaciones SpA", "SG-Operaciones", "76.000.000-0",
                 "Servicios operacionales y gestión de inventario", "Avenida Central 1250",
-                "Santiago", "Santiago", "contacto@sg-operaciones.local", "+56 2 2000 0000", null, 19m);
+                "Santiago", "Santiago", "contacto@sg-operaciones.local", "+56 2 2000 0000", null, "CLP", 19m);
             db.Empresas.Add(empresa);
         }
 

@@ -11,6 +11,12 @@ El módulo añade un ciclo comercial básico a SG-Operaciones:
 5. Una cotización aceptada puede convertirse una sola vez en factura interna.
 6. La factura conserva una copia de sus líneas y permite registrar el pago.
 
+## Moneda global
+
+La empresa utiliza `CLP` como moneda predeterminada. Los pesos chilenos se muestran con el símbolo a la izquierda, punto como separador de miles y sin decimales, por ejemplo `$10.000`.
+
+El administrador puede seleccionar CLP, USD o EUR desde **Administración → Datos de la empresa**. La opción modifica globalmente la presentación de precios, cotizaciones, indicadores comerciales y facturas. No convierte los importes existentes ni obtiene tipos de cambio.
+
 Los cambios de estado relevantes quedan trazados en auditoría. Los catálogos se desactivan de forma lógica para preservar el historial.
 
 ## Facturación

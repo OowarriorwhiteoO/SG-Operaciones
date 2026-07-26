@@ -1,6 +1,6 @@
 @model SistemaGestion.Application.DTOs.CotizacionDetalleDto
 @using SistemaGestion.Domain.Enums
-@{ ViewData["Title"] = Model.Numero; }
+@{ ViewData["Title"] = Model.Numero; var moneda = (await ComercialGlobal.ObtenerEmpresaAsync(Context.RequestAborted)).Moneda; }
 <div class="page-heading"><div><span class="eyebrow">COTIZACIÓN</span><h1>@Model.Numero</h1><p>Emitida el @Model.FechaEmision.ToString("dd-MM-yyyy") · válida hasta el @Model.FechaVencimiento.ToString("dd-MM-yyyy")</p></div><div class="heading-actions">
 @if (Model.Estado == EstadoCotizacion.Borrador) { <form asp-action="CambiarEstado" method="post"><input type="hidden" name="id" value="@Model.Id"/><input type="hidden" name="estado" value="@EstadoCotizacion.Enviada"/><button class="btn btn-outline-primary">Marcar enviada</button></form> }
 @if (Model.Estado is EstadoCotizacion.Borrador or EstadoCotizacion.Enviada) { <form asp-action="CambiarEstado" method="post"><input type="hidden" name="id" value="@Model.Id"/><input type="hidden" name="estado" value="@EstadoCotizacion.Aceptada"/><button class="btn btn-primary">Aceptar</button></form> }
@@ -9,8 +9,7 @@
 <article class="app-panel document-sheet">
 <div class="document-header"><div><span class="document-label">Cliente</span><h2>@Model.Cliente</h2><p>@Model.ClienteRut<br/>@(Model.ClienteEmail ?? "Sin correo registrado")</p></div><div class="text-end"><span class="status-pill status-@Model.Estado.ToString().ToLowerInvariant()">@Model.Estado</span></div></div>
 <div class="table-responsive"><table class="table app-table"><thead><tr><th>Código</th><th>Descripción</th><th class="text-end">Cantidad</th><th class="text-end">Precio</th><th class="text-end">Dto.</th><th class="text-end">Neto</th><th class="text-end">Total</th></tr></thead><tbody>
-@foreach (var x in Model.Lineas) { <tr><td>@x.Codigo</td><td>@x.Descripcion</td><td class="text-end">@x.Cantidad.ToString("N2") @x.Unidad</td><td class="text-end">@x.PrecioUnitario.ToString("C0")</td><td class="text-end">@x.Descuento.ToString("N2")%</td><td class="text-end">@x.Neto.ToString("C0")</td><td class="text-end"><strong>@x.Total.ToString("C0")</strong></td></tr> }
+@foreach (var x in Model.Lineas) { <tr><td>@x.Codigo</td><td>@x.Descripcion</td><td class="text-end">@x.Cantidad.ToString("N2") @x.Unidad</td><td class="text-end">@x.PrecioUnitario.ComoMoneda(moneda)</td><td class="text-end">@x.Descuento.ToString("N2")%</td><td class="text-end">@x.Neto.ComoMoneda(moneda)</td><td class="text-end"><strong>@x.Total.ComoMoneda(moneda)</strong></td></tr> }
 </tbody></table></div>
-<div class="document-bottom"><div><span class="document-label">Observaciones</span><p>@(Model.Observacion ?? "Sin observaciones.")</p></div><dl class="document-summary"><div><dt>Neto</dt><dd>@Model.Neto.ToString("C0")</dd></div><div><dt>IVA</dt><dd>@Model.Iva.ToString("C0")</dd></div><div class="document-total"><dt>Total</dt><dd>@Model.Total.ToString("C0")</dd></div></dl></div>
+<div class="document-bottom"><div><span class="document-label">Observaciones</span><p>@(Model.Observacion ?? "Sin observaciones.")</p></div><dl class="document-summary"><div><dt>Neto</dt><dd>@Model.Neto.ComoMoneda(moneda)</dd></div><div><dt>IVA</dt><dd>@Model.Iva.ComoMoneda(moneda)</dd></div><div class="document-total"><dt>Total</dt><dd>@Model.Total.ComoMoneda(moneda)</dd></div></dl></div>
 </article>
-

@@ -16,6 +16,7 @@ public sealed class EmpresaInput
     [EmailAddress, StringLength(150)] public string? Email { get; set; }
     [StringLength(40), Display(Name = "Teléfono")] public string? Telefono { get; set; }
     [Url, StringLength(180), Display(Name = "Sitio web")] public string? SitioWeb { get; set; }
+    [Required, StringLength(3), Display(Name = "Moneda global")] public string Moneda { get; set; } = "CLP";
     [Range(0, 100), Display(Name = "IVA (%)")] public decimal IvaPorcentaje { get; set; } = 19m;
 }
 

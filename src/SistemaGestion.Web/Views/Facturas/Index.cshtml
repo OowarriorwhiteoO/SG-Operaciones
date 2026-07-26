@@ -1,9 +1,8 @@
 @model IReadOnlyList<SistemaGestion.Application.DTOs.FacturaListItemDto>
-@{ ViewData["Title"] = "Facturación"; }
+@{ ViewData["Title"] = "Facturación"; var moneda = (await ComercialGlobal.ObtenerEmpresaAsync(Context.RequestAborted)).Moneda; }
 <div class="page-heading"><div><span class="eyebrow">FINANZAS</span><h1>Facturación</h1><p>Control de documentos emitidos y pagos asociados.</p></div><a class="btn btn-outline-primary" asp-controller="Cotizaciones" asp-action="Index">Ver cotizaciones</a></div>
 <div class="internal-document-note"><span class="material-symbols-outlined">info</span><span>Estos documentos son comprobantes comerciales internos y no reemplazan un documento tributario electrónico del SII.</span></div>
 <div class="app-panel table-responsive"><table class="table app-table mb-0"><thead><tr><th>Número</th><th>Emisión</th><th>Vencimiento</th><th>Cliente</th><th>Estado</th><th class="text-end">Total</th><th></th></tr></thead><tbody>
-@foreach (var x in Model) { <tr><td><a asp-action="Detalle" asp-route-id="@x.Id"><strong>@x.Numero</strong></a></td><td>@x.FechaEmision.ToString("dd-MM-yyyy")</td><td>@x.FechaVencimiento.ToString("dd-MM-yyyy")</td><td>@x.Cliente</td><td><span class="status-pill status-@x.Estado.ToString().ToLowerInvariant()">@x.Estado</span></td><td class="text-end"><strong>@x.Total.ToString("C0")</strong></td><td class="text-end"><a class="btn btn-sm btn-outline-primary" asp-action="Detalle" asp-route-id="@x.Id">Ver</a></td></tr> }
+@foreach (var x in Model) { <tr><td><a asp-action="Detalle" asp-route-id="@x.Id"><strong>@x.Numero</strong></a></td><td>@x.FechaEmision.ToString("dd-MM-yyyy")</td><td>@x.FechaVencimiento.ToString("dd-MM-yyyy")</td><td>@x.Cliente</td><td><span class="status-pill status-@x.Estado.ToString().ToLowerInvariant()">@x.Estado</span></td><td class="text-end"><strong>@x.Total.ComoMoneda(moneda)</strong></td><td class="text-end"><a class="btn btn-sm btn-outline-primary" asp-action="Detalle" asp-route-id="@x.Id">Ver</a></td></tr> }
 @if (Model.Count == 0) { <tr><td colspan="7" class="empty-state">No hay facturas. Acepta una cotización para poder facturarla.</td></tr> }
 </tbody></table></div>
-

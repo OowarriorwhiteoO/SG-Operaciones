@@ -1,5 +1,5 @@
 @model SistemaGestion.Application.DTOs.AdministracionDashboardDto
-@{ ViewData["Title"] = "Administración"; }
+@{ ViewData["Title"] = "Administración"; var moneda = (await ComercialGlobal.ObtenerEmpresaAsync(Context.RequestAborted)).Moneda; }
 
 <div class="page-heading">
     <div><span class="eyebrow">CONFIGURACIÓN GENERAL</span><h1>Panel de administración</h1><p>Gestiona la empresa, las personas y el ciclo comercial desde un solo lugar.</p></div>
@@ -8,9 +8,9 @@
 
 <section class="metric-grid mb-4">
     <article class="metric-card"><span>Trabajadores activos</span><strong>@Model.Trabajadores</strong><small>@Model.Usuarios usuarios con acceso</small></article>
-    <article class="metric-card"><span>Cotizaciones abiertas</span><strong>@Model.CotizacionesPendientes</strong><small>@Model.CotizacionesMonto.ToString("C0") en oportunidades</small></article>
-    <article class="metric-card metric-card-warning"><span>Facturas por cobrar</span><strong>@Model.FacturasPendientes</strong><small>@Model.PorCobrar.ToString("C0") pendiente</small></article>
-    <article class="metric-card"><span>Facturación del mes</span><strong>@Model.FacturadoMes.ToString("C0")</strong><small>Documentos internos vigentes</small></article>
+    <article class="metric-card"><span>Cotizaciones abiertas</span><strong>@Model.CotizacionesPendientes</strong><small>@Model.CotizacionesMonto.ComoMoneda(moneda) en oportunidades</small></article>
+    <article class="metric-card metric-card-warning"><span>Facturas por cobrar</span><strong>@Model.FacturasPendientes</strong><small>@Model.PorCobrar.ComoMoneda(moneda) pendiente</small></article>
+    <article class="metric-card"><span>Facturación del mes</span><strong>@Model.FacturadoMes.ComoMoneda(moneda)</strong><small>Documentos internos vigentes</small></article>
 </section>
 
 <section class="app-panel">
@@ -26,4 +26,3 @@
         <a class="admin-module" asp-controller="Auditoria" asp-action="Index"><span class="module-icon slate"><span class="material-symbols-outlined">policy</span></span><strong>Auditoría</strong><small>Trazabilidad de acciones relevantes</small></a>
     </div>
 </section>
-
