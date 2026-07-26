@@ -89,3 +89,25 @@ public interface IExportacionService
     ArchivoExportado InformeTiposCsv(InformeTipoDto informe);
     ArchivoExportado InformeTiposPdf(InformeTipoDto informe);
 }
+public interface IComercialService
+{
+    Task<EmpresaInput> ObtenerEmpresaAsync(CancellationToken cancellationToken);
+    Task<Resultado> GuardarEmpresaAsync(EmpresaInput input, CancellationToken cancellationToken);
+    Task<IReadOnlyList<ClienteDto>> ListarClientesAsync(CancellationToken cancellationToken);
+    Task<ClienteInput?> ObtenerClienteAsync(int id, CancellationToken cancellationToken);
+    Task<Resultado> GuardarClienteAsync(ClienteInput input, CancellationToken cancellationToken);
+    Task<Resultado> CambiarEstadoClienteAsync(int id, bool activar, CancellationToken cancellationToken);
+    Task<IReadOnlyList<ProductoServicioDto>> ListarProductosAsync(CancellationToken cancellationToken);
+    Task<ProductoServicioInput?> ObtenerProductoAsync(int id, CancellationToken cancellationToken);
+    Task<Resultado> GuardarProductoAsync(ProductoServicioInput input, CancellationToken cancellationToken);
+    Task<Resultado> CambiarEstadoProductoAsync(int id, bool activar, CancellationToken cancellationToken);
+    Task<IReadOnlyList<CotizacionListItemDto>> ListarCotizacionesAsync(CancellationToken cancellationToken);
+    Task<CotizacionDetalleDto?> ObtenerCotizacionAsync(int id, CancellationToken cancellationToken);
+    Task<Resultado<int>> CrearCotizacionAsync(CotizacionInput input, CancellationToken cancellationToken);
+    Task<Resultado> CambiarEstadoCotizacionAsync(int id, EstadoCotizacion estado, CancellationToken cancellationToken);
+    Task<Resultado<int>> FacturarCotizacionAsync(int id, CancellationToken cancellationToken);
+    Task<IReadOnlyList<FacturaListItemDto>> ListarFacturasAsync(CancellationToken cancellationToken);
+    Task<FacturaDetalleDto?> ObtenerFacturaAsync(int id, CancellationToken cancellationToken);
+    Task<Resultado> MarcarFacturaPagadaAsync(int id, DateTime fecha, string? referencia, CancellationToken cancellationToken);
+    Task<AdministracionDashboardDto> ObtenerDashboardAdministracionAsync(CancellationToken cancellationToken);
+}

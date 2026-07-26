@@ -52,6 +52,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("GenerarReportes", p => p.RequireRole("Administrador", "Supervisor"));
     options.AddPolicy("ConsultarAuditoria", p => p.RequireRole("Administrador"));
     options.AddPolicy("AnularMovimientos", p => p.RequireRole("Administrador", "Supervisor"));
+    options.AddPolicy("GestionComercial", p => p.RequireRole("Administrador", "Supervisor"));
 });
 
 var app = builder.Build();

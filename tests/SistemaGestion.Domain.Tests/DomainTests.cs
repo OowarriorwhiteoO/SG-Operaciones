@@ -81,4 +81,36 @@ public sealed class DomainTests
             entrada.Anular("supervisor", "Corrección", DateTime.UtcNow, tieneMovimientosVigentes: true));
         Assert.Equal(EstadoMovimiento.Vigente, entrada.Estado);
     }
+
+    [Fact]
+    public void Cotizacion_calcula_totales_y_controla_su_flujo()
+    {
+        var cotizacion = new Cotizacion("COT-TEST-001", 1, DateTime.Today, DateTime.Today.AddDays(15), "usuario", null);
+        var linea = new CotizacionDetalle(1, "Servicio de prueba", 2m, 10000m, 10m, true, 19m);
+        cotizacion.Detalles.Add(linea);
+        cotizacion.EstablecerTotales(linea.TotalNeto, linea.MontoIva);
+
+        Assert.Equal(18000m, cotizacion.SubtotalNeto);
+        Assert.Equal(3420m, cotizacion.MontoIva);
+        Assert.Equal(21420m, cotizacion.Total);
+
+        cotizacion.Enviar();
+        cotizacion.Aceptar();
+        cotizacion.MarcarFacturada();
+        Assert.Equal(EstadoCotizacion.Facturada, cotizacion.Estado);
+        Assert.Throws<DomainException>(() => cotizacion.Rechazar());
+    }
+
+    [Fact]
+    public void Factura_emitida_puede_registrar_un_solo_pago()
+    {
+        var factura = new Factura("FAC-TEST-001", 1, 1, DateTime.Today, DateTime.Today.AddDays(30),
+            10000m, 1900m, "usuario");
+
+        factura.MarcarPagada(DateTime.Today, "Transferencia 123");
+
+        Assert.Equal(EstadoFactura.Pagada, factura.Estado);
+        Assert.Equal("Transferencia 123", factura.ReferenciaPago);
+        Assert.Throws<DomainException>(() => factura.MarcarPagada(DateTime.Today, "Otro pago"));
+    }
 }

@@ -1,3 +1,7 @@
+@inject SistemaGestion.Application.Abstractions.IComercialService Comercial
+@{
+    var empresaLogin = await Comercial.ObtenerEmpresaAsync(Context.RequestAborted);
+}
 <!DOCTYPE html>
 <html lang="es" class="h-100">
 <head>
@@ -10,7 +14,7 @@
             document.documentElement.dataset.theme = savedTheme ?? preferredTheme;
         })();
     </script>
-    <title>@ViewData["Title"] · SG-Operaciones</title>
+    <title>@ViewData["Title"] · @empresaLogin.NombreFantasia</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet">

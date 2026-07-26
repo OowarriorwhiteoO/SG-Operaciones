@@ -1,0 +1,8 @@
+@model IReadOnlyList<SistemaGestion.Application.DTOs.CotizacionListItemDto>
+@{ ViewData["Title"] = "Cotizaciones"; }
+<div class="page-heading"><div><span class="eyebrow">VENTAS</span><h1>Cotizaciones</h1><p>Crea propuestas, registra su aceptación y conviértelas en facturas.</p></div><a class="btn btn-primary" asp-action="Crear"><span class="material-symbols-outlined">add</span> Nueva cotización</a></div>
+<div class="app-panel table-responsive"><table class="table app-table mb-0"><thead><tr><th>Número</th><th>Emisión</th><th>Vencimiento</th><th>Cliente</th><th>Estado</th><th class="text-end">Total</th><th></th></tr></thead><tbody>
+@foreach (var x in Model) { <tr><td><a asp-action="Detalle" asp-route-id="@x.Id"><strong>@x.Numero</strong></a></td><td>@x.FechaEmision.ToString("dd-MM-yyyy")</td><td>@x.FechaVencimiento.ToString("dd-MM-yyyy")</td><td>@x.Cliente</td><td><span class="status-pill status-@x.Estado.ToString().ToLowerInvariant()">@x.Estado</span></td><td class="text-end"><strong>@x.Total.ToString("C0")</strong></td><td class="text-end"><a class="btn btn-sm btn-outline-primary" asp-action="Detalle" asp-route-id="@x.Id">Ver</a></td></tr> }
+@if (Model.Count == 0) { <tr><td colspan="7" class="empty-state">No existen cotizaciones. Crea la primera para comenzar.</td></tr> }
+</tbody></table></div>
+

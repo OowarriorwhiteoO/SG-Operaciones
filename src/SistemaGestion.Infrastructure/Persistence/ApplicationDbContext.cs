@@ -15,6 +15,13 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
     public DbSet<Asignacion> Asignaciones => Set<Asignacion>();
     public DbSet<Merma> Mermas => Set<Merma>();
     public DbSet<Auditoria> Auditorias => Set<Auditoria>();
+    public DbSet<Empresa> Empresas => Set<Empresa>();
+    public DbSet<Cliente> Clientes => Set<Cliente>();
+    public DbSet<ProductoServicio> ProductosServicios => Set<ProductoServicio>();
+    public DbSet<Cotizacion> Cotizaciones => Set<Cotizacion>();
+    public DbSet<CotizacionDetalle> CotizacionDetalles => Set<CotizacionDetalle>();
+    public DbSet<Factura> Facturas => Set<Factura>();
+    public DbSet<FacturaDetalle> FacturaDetalles => Set<FacturaDetalle>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -22,4 +29,3 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 }
-

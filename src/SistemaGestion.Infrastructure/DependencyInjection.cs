@@ -40,6 +40,7 @@ public static class DependencyInjection
         services.AddScoped<IReporteService, ReporteService>();
         services.AddScoped<IExportacionService, ExportacionService>();
         services.AddScoped<IAuditoriaConsultaService, AuditoriaConsultaService>();
+        services.AddScoped<IComercialService, ComercialService>();
         return services;
     }
 }

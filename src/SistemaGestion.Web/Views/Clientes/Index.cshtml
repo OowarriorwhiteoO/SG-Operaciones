@@ -1,0 +1,8 @@
+@model IReadOnlyList<SistemaGestion.Application.DTOs.ClienteDto>
+@{ ViewData["Title"] = "Clientes"; }
+<div class="page-heading"><div><span class="eyebrow">VENTAS</span><h1>Clientes</h1><p>Datos comerciales y contactos para cotizaciones y facturas.</p></div><a class="btn btn-primary" asp-action="Crear"><span class="material-symbols-outlined">add</span> Nuevo cliente</a></div>
+<div class="app-panel table-responsive"><table class="table app-table mb-0"><thead><tr><th>RUT</th><th>Razón social</th><th>Contacto</th><th>Correo</th><th>Estado</th><th></th></tr></thead><tbody>
+@foreach (var x in Model) { <tr><td>@x.Rut</td><td><strong>@x.RazonSocial</strong></td><td>@(x.NombreContacto ?? "—")</td><td>@(x.Email ?? "—")</td><td><span class="status-pill @(x.Estado.ToString()=="Activo" ? "success" : "neutral")">@x.Estado</span></td><td class="text-end"><a class="btn btn-sm btn-outline-primary" asp-action="Editar" asp-route-id="@x.Id">Editar</a> <form class="d-inline" asp-action="CambiarEstado" method="post"><input type="hidden" name="id" value="@x.Id"/><input type="hidden" name="activar" value="@(x.Estado.ToString()!="Activo" ? "true" : "false")"/><button class="btn btn-sm btn-outline-secondary">@(x.Estado.ToString()=="Activo" ? "Desactivar" : "Activar")</button></form></td></tr> }
+@if (Model.Count == 0) { <tr><td colspan="6" class="empty-state">Aún no hay clientes registrados.</td></tr> }
+</tbody></table></div>
+

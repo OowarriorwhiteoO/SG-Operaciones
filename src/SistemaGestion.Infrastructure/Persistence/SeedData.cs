@@ -100,6 +100,7 @@ public static class SeedData
         }
 
         await CargarDatosOperacionalesAsync(db, ct);
+        await CargarDatosComercialesAsync(db, ct);
     }
 
     private static async Task CargarDatosOperacionalesAsync(ApplicationDbContext db, CancellationToken ct)
@@ -221,6 +222,65 @@ public static class SeedData
                 motivo: "Población inicial de datos operacionales."));
         }
 
+        await db.SaveChangesAsync(ct);
+    }
+
+    private static async Task CargarDatosComercialesAsync(ApplicationDbContext db, CancellationToken ct)
+    {
+        if (!await db.Empresas.AnyAsync(ct))
+        {
+            var empresa = new Empresa("SG-Operaciones SpA", "SG-Operaciones", "76.000.000-0");
+            empresa.Editar("SG-Operaciones SpA", "SG-Operaciones", "76.000.000-0",
+                "Servicios operacionales y gestión de inventario", "Avenida Central 1250",
+                "Santiago", "Santiago", "contacto@sg-operaciones.local", "+56 2 2000 0000", null, 19m);
+            db.Empresas.Add(empresa);
+        }
+
+        if (!await db.Clientes.AnyAsync(ct))
+        {
+            var clientes = new[]
+            {
+                new Cliente("76.111.111-1", "Comercial Andina SpA"),
+                new Cliente("76.222.222-2", "Servicios Horizonte Ltda."),
+                new Cliente("76.333.333-3", "Logística del Pacífico SpA"),
+                new Cliente("76.444.444-4", "Constructora Valle Sur Ltda.")
+            };
+            clientes[0].Editar(clientes[0].Rut, clientes[0].RazonSocial, "Daniela Rojas", "compras@andina.local", "+56 9 5000 1001", "Los Alerces 245", "Providencia", "Santiago");
+            clientes[1].Editar(clientes[1].Rut, clientes[1].RazonSocial, "Felipe Soto", "contacto@horizonte.local", "+56 9 5000 1002", "Ruta Norte 880", "Antofagasta", "Antofagasta");
+            clientes[2].Editar(clientes[2].Rut, clientes[2].RazonSocial, "Camila Vera", "operaciones@pacifico.local", "+56 9 5000 1003", "Puerto Industrial 90", "Valparaíso", "Valparaíso");
+            clientes[3].Editar(clientes[3].Rut, clientes[3].RazonSocial, "Tomás Silva", "abastecimiento@vallesur.local", "+56 9 5000 1004", "Camino Sur 1450", "Temuco", "Temuco");
+            db.Clientes.AddRange(clientes);
+        }
+
+        if (!await db.ProductosServicios.AnyAsync(ct))
+        {
+            db.ProductosServicios.AddRange(
+                new ProductoServicio("EPP-CASCO", "Casco de seguridad ABS", "unidad", 18990m, true, false),
+                new ProductoServicio("EPP-GUANTE", "Guante anticorte nivel 5", "par", 8490m, true, false),
+                new ProductoServicio("HER-TAL18", "Taladro percutor 18V", "unidad", 89990m, true, false),
+                new ProductoServicio("INS-CINTA", "Cinta de embalaje reforzada", "rollo", 3290m, true, false),
+                new ProductoServicio("SERV-INV", "Levantamiento de inventario", "jornada", 240000m, true, true),
+                new ProductoServicio("SERV-AUD", "Auditoría operacional", "servicio", 390000m, true, true));
+        }
+
+        await db.SaveChangesAsync(ct);
+
+        // Los documentos de ejemplo permiten revisar el flujo sin depender de información real.
+        if (await db.Cotizaciones.AnyAsync(x => x.Numero.StartsWith("COT-DEMO-"), ct))
+            return;
+
+        var usuarioId = await db.Users.OrderBy(x => x.Id).Select(x => x.Id).FirstOrDefaultAsync(ct);
+        var cliente = await db.Clientes.OrderBy(x => x.Id).FirstAsync(ct);
+        var productos = await db.ProductosServicios.OrderBy(x => x.Id).Take(2).ToListAsync(ct);
+        if (usuarioId is null || productos.Count < 2) return;
+
+        var cotizacion = new Cotizacion("COT-DEMO-001", cliente.Id, DateTime.UtcNow.Date.AddDays(-4),
+            DateTime.UtcNow.Date.AddDays(11), usuarioId, "Entrega coordinada con el área de abastecimiento.");
+        cotizacion.Detalles.Add(new CotizacionDetalle(productos[0].Id, productos[0].Nombre, 12m, productos[0].PrecioNeto, 0m, productos[0].AfectoIva, 19m));
+        cotizacion.Detalles.Add(new CotizacionDetalle(productos[1].Id, productos[1].Nombre, 24m, productos[1].PrecioNeto, 5m, productos[1].AfectoIva, 19m));
+        cotizacion.EstablecerTotales(cotizacion.Detalles.Sum(x => x.TotalNeto), cotizacion.Detalles.Sum(x => x.MontoIva));
+        cotizacion.Enviar();
+        db.Cotizaciones.Add(cotizacion);
         await db.SaveChangesAsync(ct);
     }
 }

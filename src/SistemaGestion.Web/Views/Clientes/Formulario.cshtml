@@ -1,0 +1,10 @@
+@model SistemaGestion.Application.DTOs.ClienteInput
+@{ ViewData["Title"] = Model.Id == 0 ? "Nuevo cliente" : "Editar cliente"; }
+<div class="page-heading"><div><span class="eyebrow">CLIENTES</span><h1>@ViewData["Title"]</h1><p>Información de identificación, contacto y despacho.</p></div></div>
+<form asp-action="Guardar" method="post" class="app-panel form-panel"><input asp-for="Id" type="hidden"/><div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div><div class="row g-3">
+<div class="col-md-4"><label asp-for="Rut" class="form-label"></label><input asp-for="Rut" class="form-control"/><span asp-validation-for="Rut" class="text-danger"></span></div><div class="col-md-8"><label asp-for="RazonSocial" class="form-label"></label><input asp-for="RazonSocial" class="form-control"/><span asp-validation-for="RazonSocial" class="text-danger"></span></div>
+<div class="col-md-4"><label asp-for="NombreContacto" class="form-label"></label><input asp-for="NombreContacto" class="form-control"/></div><div class="col-md-4"><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control"/></div><div class="col-md-4"><label asp-for="Telefono" class="form-label"></label><input asp-for="Telefono" class="form-control"/></div>
+<div class="col-md-6"><label asp-for="Direccion" class="form-label"></label><input asp-for="Direccion" class="form-control"/></div><div class="col-md-3"><label asp-for="Comuna" class="form-label"></label><input asp-for="Comuna" class="form-control"/></div><div class="col-md-3"><label asp-for="Ciudad" class="form-label"></label><input asp-for="Ciudad" class="form-control"/></div>
+</div><div class="form-actions"><a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a><button class="btn btn-primary">Guardar cliente</button></div></form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+

@@ -1,0 +1,29 @@
+@model SistemaGestion.Application.DTOs.AdministracionDashboardDto
+@{ ViewData["Title"] = "Administración"; }
+
+<div class="page-heading">
+    <div><span class="eyebrow">CONFIGURACIÓN GENERAL</span><h1>Panel de administración</h1><p>Gestiona la empresa, las personas y el ciclo comercial desde un solo lugar.</p></div>
+    <a class="btn btn-primary" asp-action="Empresa"><span class="material-symbols-outlined">edit</span> Datos de empresa</a>
+</div>
+
+<section class="metric-grid mb-4">
+    <article class="metric-card"><span>Trabajadores activos</span><strong>@Model.Trabajadores</strong><small>@Model.Usuarios usuarios con acceso</small></article>
+    <article class="metric-card"><span>Cotizaciones abiertas</span><strong>@Model.CotizacionesPendientes</strong><small>@Model.CotizacionesMonto.ToString("C0") en oportunidades</small></article>
+    <article class="metric-card metric-card-warning"><span>Facturas por cobrar</span><strong>@Model.FacturasPendientes</strong><small>@Model.PorCobrar.ToString("C0") pendiente</small></article>
+    <article class="metric-card"><span>Facturación del mes</span><strong>@Model.FacturadoMes.ToString("C0")</strong><small>Documentos internos vigentes</small></article>
+</section>
+
+<section class="app-panel">
+    <div class="panel-heading"><div><h2>Aplicaciones de @Model.Empresa</h2><p>Accesos para administrar los datos maestros y las operaciones comerciales.</p></div></div>
+    <div class="admin-modules">
+        <a class="admin-module" asp-action="Empresa"><span class="module-icon blue"><span class="material-symbols-outlined">domain</span></span><strong>Empresa</strong><small>Identidad, contacto, dirección e impuestos</small></a>
+        <a class="admin-module" asp-controller="Trabajadores" asp-action="Index"><span class="module-icon violet"><span class="material-symbols-outlined">badge</span></span><strong>Trabajadores</strong><small>Ficha y estado del personal</small></a>
+        <a class="admin-module" asp-controller="Usuarios" asp-action="Index"><span class="module-icon slate"><span class="material-symbols-outlined">manage_accounts</span></span><strong>Usuarios</strong><small>Acceso, roles y seguridad</small></a>
+        <a class="admin-module" asp-controller="Clientes" asp-action="Index"><span class="module-icon cyan"><span class="material-symbols-outlined">groups</span></span><strong>Clientes</strong><small>@Model.Clientes clientes activos</small></a>
+        <a class="admin-module" asp-controller="Productos" asp-action="Index"><span class="module-icon green"><span class="material-symbols-outlined">sell</span></span><strong>Productos y servicios</strong><small>@Model.Productos ítems disponibles</small></a>
+        <a class="admin-module" asp-controller="Cotizaciones" asp-action="Index"><span class="module-icon orange"><span class="material-symbols-outlined">request_quote</span></span><strong>Cotizaciones</strong><small>Propuestas y seguimiento comercial</small></a>
+        <a class="admin-module" asp-controller="Facturas" asp-action="Index"><span class="module-icon red"><span class="material-symbols-outlined">receipt_long</span></span><strong>Facturación</strong><small>Emisión interna y control de pagos</small></a>
+        <a class="admin-module" asp-controller="Auditoria" asp-action="Index"><span class="module-icon slate"><span class="material-symbols-outlined">policy</span></span><strong>Auditoría</strong><small>Trazabilidad de acciones relevantes</small></a>
+    </div>
+</section>
+

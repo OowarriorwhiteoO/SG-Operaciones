@@ -1,8 +1,9 @@
 @model SistemaGestion.Web.Models.LoginViewModel
-@{ Layout = "_LoginLayout"; ViewData["Title"] = "Iniciar sesión"; }
+@inject SistemaGestion.Application.Abstractions.IComercialService Comercial
+@{ Layout = "_LoginLayout"; ViewData["Title"] = "Iniciar sesión"; var empresa = await Comercial.ObtenerEmpresaAsync(Context.RequestAborted); }
 <section class="login-brand">
     @* La marca se presenta sin incluir datos del entorno ni información de acceso. *@
-    <div class="login-brand-row"><div class="login-logo"><span class="material-symbols-outlined">inventory_2</span></div><div><div class="login-product">SG-Operaciones</div><div class="login-suite">Gestión operacional</div></div></div>
+    <div class="login-brand-row"><div class="login-logo"><span class="material-symbols-outlined">inventory_2</span></div><div><div class="login-product">@empresa.NombreFantasia</div><div class="login-suite">Gestión operacional</div></div></div>
     <div class="login-message"><span class="login-kicker">Control y trazabilidad</span><h1>Control operativo<br/>con trazabilidad total.</h1><p>Inventario, asignaciones y mermas consolidados en una única fuente verificable.</p></div>
 </section>
 <section class="login-panel">

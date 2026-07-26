@@ -1,0 +1,24 @@
+@model SistemaGestion.Application.DTOs.EmpresaInput
+@{ ViewData["Title"] = "Datos de empresa"; }
+
+<div class="page-heading"><div><span class="eyebrow">ADMINISTRACIÓN</span><h1>Datos de la empresa</h1><p>Esta información se utiliza en la identidad del sistema y en los documentos comerciales.</p></div></div>
+<form asp-action="Empresa" method="post" class="app-panel form-panel">
+    <input asp-for="Id" type="hidden" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <div class="row g-3">
+        <div class="col-md-6"><label asp-for="RazonSocial" class="form-label"></label><input asp-for="RazonSocial" class="form-control" /><span asp-validation-for="RazonSocial" class="text-danger"></span></div>
+        <div class="col-md-6"><label asp-for="NombreFantasia" class="form-label"></label><input asp-for="NombreFantasia" class="form-control" /><span asp-validation-for="NombreFantasia" class="text-danger"></span></div>
+        <div class="col-md-4"><label asp-for="Rut" class="form-label"></label><input asp-for="Rut" class="form-control" /><span asp-validation-for="Rut" class="text-danger"></span></div>
+        <div class="col-md-8"><label asp-for="Giro" class="form-label"></label><input asp-for="Giro" class="form-control" /></div>
+        <div class="col-md-8"><label asp-for="Direccion" class="form-label"></label><input asp-for="Direccion" class="form-control" /></div>
+        <div class="col-md-4"><label asp-for="Comuna" class="form-label"></label><input asp-for="Comuna" class="form-control" /></div>
+        <div class="col-md-4"><label asp-for="Ciudad" class="form-label"></label><input asp-for="Ciudad" class="form-control" /></div>
+        <div class="col-md-4"><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control" /></div>
+        <div class="col-md-4"><label asp-for="Telefono" class="form-label"></label><input asp-for="Telefono" class="form-control" /></div>
+        <div class="col-md-8"><label asp-for="SitioWeb" class="form-label"></label><input asp-for="SitioWeb" class="form-control" placeholder="https://" /></div>
+        <div class="col-md-4"><label asp-for="IvaPorcentaje" class="form-label"></label><input asp-for="IvaPorcentaje" class="form-control" /></div>
+    </div>
+    <div class="form-actions"><a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a><button class="btn btn-primary" type="submit">Guardar cambios</button></div>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+

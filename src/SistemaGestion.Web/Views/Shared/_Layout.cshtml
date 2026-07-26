@@ -1,6 +1,9 @@
+@inject SistemaGestion.Application.Abstractions.IComercialService Comercial
 @{
     var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
     string Active(string name) => controller.Equals(name, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+    var empresaLayout = await Comercial.ObtenerEmpresaAsync(Context.RequestAborted);
+    var nombreEmpresa = empresaLayout.NombreFantasia;
 }
 <!DOCTYPE html>
 <html lang="es" class="h-100">
@@ -14,7 +17,7 @@
             document.documentElement.dataset.theme = savedTheme ?? preferredTheme;
         })();
     </script>
-    <title>@ViewData["Title"] · SG-Operaciones</title>
+    <title>@ViewData["Title"] · @nombreEmpresa</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet">
@@ -26,7 +29,7 @@
     <aside class="app-sidebar" id="appSidebar">
         <a class="brand-block" asp-controller="Home" asp-action="Index" aria-label="Ir al panel principal">
             <div class="brand-mark"><span class="material-symbols-outlined">inventory_2</span></div>
-            <div><div class="brand-title">SG-Operaciones</div><div class="brand-subtitle">Gestión operacional</div></div>
+            <div><div class="brand-title">@nombreEmpresa</div><div class="brand-subtitle">Gestión operacional</div></div>
         </a>
         <nav class="sidebar-nav" aria-label="Navegación principal">
             <div class="nav-section-label">Principal</div>
@@ -39,6 +42,11 @@
             {
                 <a class="sidebar-link @(controller == "Mermas" && ViewContext.RouteData.Values["action"]?.ToString() == "Indicadores" ? "active" : "")" asp-controller="Mermas" asp-action="Indicadores"><span class="material-symbols-outlined">assessment</span><span>Indicadores</span></a>
                 <a class="sidebar-link @Active("Reportes")" asp-controller="Reportes" asp-action="Index"><span class="material-symbols-outlined">summarize</span><span>Informes</span></a>
+                <div class="nav-section-label">Comercial</div>
+                <a class="sidebar-link @Active("Clientes")" asp-controller="Clientes" asp-action="Index"><span class="material-symbols-outlined">groups</span><span>Clientes</span></a>
+                <a class="sidebar-link @Active("Productos")" asp-controller="Productos" asp-action="Index"><span class="material-symbols-outlined">sell</span><span>Productos y servicios</span></a>
+                <a class="sidebar-link @Active("Cotizaciones")" asp-controller="Cotizaciones" asp-action="Index"><span class="material-symbols-outlined">request_quote</span><span>Cotizaciones</span></a>
+                <a class="sidebar-link @Active("Facturas")" asp-controller="Facturas" asp-action="Index"><span class="material-symbols-outlined">receipt_long</span><span>Facturación</span></a>
             }
             <div class="nav-section-label">Catálogos</div>
             <a class="sidebar-link @Active("Trabajadores")" asp-controller="Trabajadores" asp-action="Index"><span class="material-symbols-outlined">badge</span><span>Trabajadores</span></a>
@@ -46,6 +54,7 @@
             <a class="sidebar-link @Active("MotivosMerma")" asp-controller="MotivosMerma" asp-action="Index"><span class="material-symbols-outlined">rule</span><span>Motivos de merma</span></a>
             @if (User.IsInRole("Administrador"))
             {
+                <a class="sidebar-link @Active("Administracion")" asp-controller="Administracion" asp-action="Index"><span class="material-symbols-outlined">admin_panel_settings</span><span>Administración</span></a>
                 <a class="sidebar-link @Active("Auditoria")" asp-controller="Auditoria" asp-action="Index"><span class="material-symbols-outlined">policy</span><span>Auditoría</span></a>
                 <a class="sidebar-link @Active("Usuarios")" asp-controller="Usuarios" asp-action="Index"><span class="material-symbols-outlined">manage_accounts</span><span>Usuarios</span></a>
             }
@@ -60,7 +69,7 @@
         <header class="topbar">
             <div class="topbar-left">
                 <button class="icon-button sidebar-toggle" type="button" data-sidebar-toggle aria-label="Abrir menú"><span class="material-symbols-outlined">menu</span></button>
-                <div class="system-name">SG<br/>Operaciones</div>
+                <div class="system-name">@nombreEmpresa</div>
                 <a class="topbar-search" asp-controller="Reportes" asp-action="Movimientos"><span class="material-symbols-outlined">search</span><span>Buscar operaciones...</span></a>
             </div>
             <div class="topbar-right">
@@ -77,7 +86,7 @@
             @if (TempData["Error"] is string error) { <div class="alert alert-danger app-alert"><span class="material-symbols-outlined">error</span><span>@error</span></div> }
             @RenderBody()
         </main>
-        <footer class="app-footer">SG-Operaciones · Transacciones protegidas y auditadas</footer>
+        <footer class="app-footer">@nombreEmpresa · Transacciones protegidas y auditadas</footer>
     </div>
 </div>
 <div class="sidebar-backdrop" data-sidebar-toggle></div>

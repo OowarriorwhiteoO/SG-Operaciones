@@ -380,6 +380,47 @@ html { font-size: 13px; }
 :root[data-theme="dark"] .sidebar-link:hover { color: #ffffff; background: #192940; }
 :root[data-theme="dark"] .sidebar-link.active { color: #8fc2ff; background: #17345b; }
 :root[data-theme="dark"] .sidebar-link.active .material-symbols-outlined { color: #70b3ff; }
+
+/* Panel modular y documentos comerciales */
+.admin-modules { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; padding: 4px 0; }
+.admin-module { min-height: 150px; display: flex; flex-direction: column; gap: 6px; padding: 20px; color: var(--ink); text-decoration: none; background: var(--surface); border: 1px solid var(--outline); border-radius: 12px; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+.admin-module:hover { color: var(--ink); transform: translateY(-2px); border-color: #83b7f0; box-shadow: 0 10px 28px rgba(15, 50, 90, .09); }
+.admin-module strong { margin-top: 6px; font-size: 15px; }
+.admin-module small { color: var(--muted); line-height: 1.45; }
+.module-icon { width: 42px; height: 42px; display: grid; place-items: center; color: white; border-radius: 10px; }
+.module-icon.blue { background: #1769c2; }.module-icon.violet { background: #6d5cc7; }.module-icon.slate { background: #52637a; }
+.module-icon.cyan { background: #078b9e; }.module-icon.green { background: #16835b; }.module-icon.orange { background: #c26808; }.module-icon.red { background: #c53f48; }
+.form-panel { padding: 24px; }
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--outline); }
+.heading-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.heading-actions form { margin: 0; }
+.section-title { margin: 0 0 12px; font-size: 16px; }
+.document-sheet { padding: 26px; }
+.document-header, .document-bottom { display: flex; justify-content: space-between; gap: 28px; margin-bottom: 22px; }
+.document-header h2 { margin: 3px 0 6px; font-size: 20px; }
+.document-label { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.document-bottom { align-items: flex-start; margin: 22px 0 0; }
+.document-bottom > :first-child { flex: 1; }
+.document-summary { width: min(100%, 340px); margin: 0; }
+.document-summary div { display: flex; justify-content: space-between; gap: 25px; padding: 8px 4px; }
+.document-summary dt { color: var(--muted); font-weight: 500; }.document-summary dd { margin: 0; font-weight: 700; }
+.document-summary .document-total { margin-top: 4px; padding-top: 13px; color: var(--ink); font-size: 19px; border-top: 2px solid var(--primary); }
+.payment-form { display: grid; grid-template-columns: 170px minmax(220px, 1fr) auto; align-items: end; gap: 10px; }
+.internal-document-note { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding: 12px 15px; color: #745200; background: #fff8dc; border: 1px solid #efd36e; border-radius: 9px; font-size: 13px; }
+.status-borrador, .status-neutral { color: #536176; background: #edf1f6; }
+.status-enviada, .status-emitida { color: #0059ae; background: #e0efff; }
+.status-aceptada, .status-pagada { color: #087447; background: #dcf7e9; }
+.status-rechazada, .status-vencida, .status-anulada { color: #a72832; background: #fde5e7; }
+.status-facturada { color: #6a46ad; background: #eee7fc; }
+:root[data-theme="dark"] .admin-module { background: var(--surface); }
+:root[data-theme="dark"] .internal-document-note { color: #ffe38d; background: #312a16; border-color: #6f5d1d; }
+:root[data-theme="dark"] .status-borrador, :root[data-theme="dark"] .status-neutral { color: #d0d8e4; background: #29364a; }
+:root[data-theme="dark"] .status-enviada, :root[data-theme="dark"] .status-emitida { color: #9dcbff; background: #173d68; }
+:root[data-theme="dark"] .status-aceptada, :root[data-theme="dark"] .status-pagada { color: #8ce2b8; background: #174a37; }
+:root[data-theme="dark"] .status-rechazada, :root[data-theme="dark"] .status-vencida, :root[data-theme="dark"] .status-anulada { color: #ffadb4; background: #5b252d; }
+:root[data-theme="dark"] .status-facturada { color: #d4baff; background: #403063; }
+@media(max-width:1100px){.admin-modules{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.admin-modules{grid-template-columns:1fr}.document-header,.document-bottom{flex-direction:column}.payment-form{grid-template-columns:1fr}.document-summary{width:100%}}
 :root[data-theme="dark"] .topbar-search { color: var(--ink-muted); background: var(--surface-low); border-color: var(--outline); }
 :root[data-theme="dark"] .topbar-search:hover { color: var(--ink); }
 :root[data-theme="dark"] .module-card:not(.module-primary) { color: var(--ink); background: var(--panel); border-color: var(--outline); }
