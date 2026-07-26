@@ -1,6 +1,6 @@
 # SG-Operaciones
 
-Aplicación transaccional en ASP.NET Core MVC para centralizar entradas, asignaciones y mermas. Incluye arquitectura por capas, Identity, catálogos, movimientos, saldo, auditoría, concurrencia, anulaciones, indicadores, consultas, informes y exportaciones.
+Aplicación de gestión en ASP.NET Core MVC para centralizar operaciones, inventario y el ciclo comercial. Incluye arquitectura por capas, Identity, configuración de empresa, trabajadores, clientes, productos y servicios, cotizaciones, facturación interna, auditoría, indicadores, informes y exportaciones.
 
 ## Requisitos
 
@@ -30,7 +30,9 @@ El administrador inicial solo se crea cuando ambas variables están configuradas
 
 ## Datos de desarrollo
 
-Durante el primer inicio en ambiente `Development`, la aplicación completa los catálogos y agrega una carga operacional distribuida en los últimos 120 días. Los documentos generados usan el prefijo `SGO-CARGA-`, por lo que la inicialización es idempotente y no duplica ni reemplaza información existente.
+Durante el primer inicio en ambiente `Development`, la aplicación completa los catálogos, agrega una carga operacional distribuida en los últimos 120 días y prepara datos comerciales ficticios. Los documentos generados usan prefijos identificables, por lo que la inicialización es idempotente y no duplica ni reemplaza información existente.
+
+Las facturas que genera el módulo comercial son comprobantes internos para seguimiento y cobranza. No sustituyen una factura electrónica ni un DTE autorizado por el SII.
 
 ## Verificación
 
@@ -39,4 +41,4 @@ dotnet build SistemaGestion.slnx
 dotnet test SistemaGestion.slnx
 ```
 
-Consulte [arquitectura](docs/arquitectura.md), [modelo de datos](docs/modelo-datos.md), [reglas](docs/reglas-negocio.md), [permisos](docs/matriz-permisos.md), [instalación](docs/manual-instalacion.md), [manual de usuario](docs/manual-usuario.md), [pruebas](docs/plan-pruebas.md) y [despliegue](docs/despliegue.md).
+Consulte [arquitectura](docs/arquitectura.md), [módulo comercial](docs/modulo-comercial.md), [modelo de datos](docs/modelo-datos.md), [reglas](docs/reglas-negocio.md), [permisos](docs/matriz-permisos.md), [instalación](docs/manual-instalacion.md), [manual de usuario](docs/manual-usuario.md), [pruebas](docs/plan-pruebas.md) y [despliegue](docs/despliegue.md).

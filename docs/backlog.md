@@ -49,4 +49,20 @@
 
 ## Pendientes
 
+- Integración tributaria con un proveedor autorizado para emitir DTE del SII.
+- Compras, proveedores y reglas de reposición automática.
+- CRM con oportunidades, actividades y pronóstico de ventas.
+- Gastos, cuentas por cobrar y flujo de caja.
+- Documentos adjuntos y firma electrónica de cotizaciones.
+- Mantenimiento preventivo y controles de calidad.
 - Validación con usuarios y preparación de una eventual versión productiva.
+
+## Módulo comercial — completado
+
+- Panel de administración con indicadores y accesos por aplicación.
+- Configuración editable de identidad, contacto y datos tributarios de la empresa.
+- Administración de trabajadores y usuarios desde el panel central.
+- Catálogo de clientes, productos y servicios.
+- Cotizaciones con descuentos, impuestos, estados y conversión a factura.
+- Facturación interna, impresión y registro de pago.
+- Auditoría de las acciones comerciales relevantes.

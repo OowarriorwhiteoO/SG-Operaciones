@@ -10,5 +10,8 @@
 | Anular movimientos | Sí | No | Sí | No |
 | Reportes y exportación | Sí | No | Sí | Según política |
 | Auditoría | Sí | No | No | No |
+| Configuración de empresa | Sí | No | No | No |
+| Clientes, productos y servicios | Sí | No | Sí | No |
+| Cotizaciones y facturación interna | Sí | No | Sí | No |
 
-Las políticas `AdministrarCatalogos`, `GestionarTrabajadores`, `LecturaOperacional`, `CrearMovimientos`, `AnularMovimientos` y `GenerarReportes` se verifican en servidor.
+Las políticas `AdministrarCatalogos`, `GestionarTrabajadores`, `LecturaOperacional`, `CrearMovimientos`, `AnularMovimientos`, `GenerarReportes` y `GestionComercial` se verifican en servidor. La configuración general de la empresa exige directamente el rol `Administrador`.
