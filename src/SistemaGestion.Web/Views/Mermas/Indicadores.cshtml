@@ -43,12 +43,12 @@
         @if(Model.Indicador.Items.Count==0){<p class="text-muted mb-0">No hay mermas vigentes en el período.</p>}
         @foreach(var x in Model.Indicador.Items)
         {
-            <a class="d-block text-decoration-none text-body mb-3" asp-action="Index"
+            <a class="pareto-item d-block text-decoration-none mb-3" asp-action="Index"
                asp-route-FechaDesde="@f.FechaDesde.ToString("yyyy-MM-dd")"
                asp-route-FechaHasta="@f.FechaHasta.ToString("yyyy-MM-dd")"
                asp-route-MotivoMermaId="@x.MotivoMermaId" asp-route-TipoRegistroId="@x.TipoRegistroId"
                asp-route-Estado="Vigente">
-                <div class="d-flex justify-content-between gap-2"><span>@x.Motivo · @x.Tipo</span><strong>@x.PorcentajeMermas.ToString("N2")%</strong></div>
+                <div class="d-flex justify-content-between gap-2"><span class="pareto-label">@x.Motivo · @x.Tipo</span><strong class="pareto-value">@x.PorcentajeMermas.ToString("N2")%</strong></div>
                 <div class="progress" role="progressbar" aria-label="@x.Motivo" aria-valuenow="@x.PorcentajeMermas" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar bg-warning" style="width:@x.PorcentajeMermas.ToString("0.##",System.Globalization.CultureInfo.InvariantCulture)%"></div></div>
             </a>
         }

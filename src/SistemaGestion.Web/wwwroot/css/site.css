@@ -314,6 +314,13 @@ html { font-size: 13px; }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
+  --bs-body-color: #edf4ff;
+  --bs-body-color-rgb: 237,244,255;
+  --bs-secondary-color: rgba(169,184,204,.82);
+  --bs-secondary-color-rgb: 169,184,204;
+  --bs-emphasis-color: #ffffff;
+  --bs-emphasis-color-rgb: 255,255,255;
+  --bs-border-color: #31435d;
   --primary: #5aa2ff;
   --primary-bright: #3b8cff;
   --primary-soft: #152f52;
@@ -409,6 +416,12 @@ html { font-size: 13px; }
 :root[data-theme="dark"] .login-card { color: var(--ink); background: rgba(17,28,46,.97); border-color: #354762; }
 :root[data-theme="dark"] .login-card-icon { background: var(--primary-soft); }
 :root[data-theme="dark"] .login-body::before { filter: brightness(.78); }
+.pareto-item { color: var(--ink); }
+.pareto-item:hover { color: var(--primary); }
+.pareto-value { color: #a76400; }
+:root[data-theme="dark"] .pareto-item,
+:root[data-theme="dark"] .pareto-item:hover { color: #f8fbff; }
+:root[data-theme="dark"] .pareto-value { color: #ffd34e; text-shadow: 0 0 14px rgba(255,211,78,.16); }
 .theme-toggle { border: 1px solid transparent; transition: color .18s ease, background .18s ease, transform .18s ease; }
 .theme-toggle:hover { transform: rotate(8deg); }
 .theme-toggle[aria-pressed="true"] { color: #f5b642; background: var(--surface-mid); border-color: var(--outline); }
